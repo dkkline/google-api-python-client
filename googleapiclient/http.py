@@ -21,21 +21,21 @@ actuall HTTP request.
 
 __author__ = 'jcgregorio@google.com (Joe Gregorio)'
 
-import StringIO
+from six import StringIO
 import base64
 import copy
 import gzip
 import httplib2
 import json
 import logging
-import mimeparse
+from . import mimeparse
 import mimetypes
 import os
 import random
 import sys
 import time
 import urllib
-import urlparse
+from six.moves.urllib import parse as urlparse
 import uuid
 
 from email.generator import Generator
@@ -465,7 +465,7 @@ class MediaInMemoryUpload(MediaIoBaseUpload):
     resumable: bool, True if this is a resumable upload. False means upload
       in a single request.
     """
-    fd = StringIO.StringIO(body)
+    fd = StringIO(body)
     super(MediaInMemoryUpload, self).__init__(fd, mimetype, chunksize=chunksize,
                                               resumable=resumable)
 
@@ -1110,7 +1110,7 @@ class BatchHttpRequest(object):
       msg['content-length'] = str(len(request.body))
 
     # Serialize the mime message.
-    fp = StringIO.StringIO()
+    fp = StringIO()
     # maxheaderlen=0 means don't line wrap headers.
     g = Generator(fp, maxheaderlen=0)
     g.flatten(msg, unixfrom=False)
@@ -1233,7 +1233,7 @@ class BatchHttpRequest(object):
 
     # encode the body: note that we can't use `as_string`, because
     # it plays games with `From ` lines.
-    fp = StringIO.StringIO()
+    fp = StringIO()
     g = Generator(fp, mangle_from_=False)
     g.flatten(message, unixfrom=False)
     body = fp.getvalue()
@@ -1456,7 +1456,7 @@ class HttpMock(object):
     if headers is None:
       headers = {'status': '200 OK'}
     if filename:
-      f = file(filename, 'r')
+      f = open(filename, 'r')
       self.data = f.read()
       f.close()
     else:
