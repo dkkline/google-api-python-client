@@ -171,7 +171,7 @@ class BaseModel(Model):
         if isinstance(value, six.text_type) and six.callable(value.encode):
           value = value.encode('utf-8')
         astuples.append((key, value))
-    return '?' + six.moves.urllib.parse.urlencode(astuples)
+    return '?' + urllib.parse.urlencode(astuples)
 
   def _log_response(self, resp, content):
     """Logs debugging information about the response if requested."""
@@ -362,7 +362,7 @@ def makepatch(original, modified):
       body=makepatch(original, item)).execute()
   """
   patch = {}
-  for key, original_value in original.iteritems():
+  for key, original_value in six.iteritems(original):
     modified_value = modified.get(key, None)
     if modified_value is None:
       # Use None to signal that the element is deleted
