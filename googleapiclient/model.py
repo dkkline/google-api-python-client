@@ -107,11 +107,11 @@ class BaseModel(Model):
     if dump_request_response:
       logging.info('--request-start--')
       logging.info('-headers-start-')
-      for h, v in headers.iteritems():
+      for h, v in six.iteritems(headers):
         logging.info('%s: %s', h, v)
       logging.info('-headers-end-')
       logging.info('-path-parameters-start-')
-      for h, v in path_params.iteritems():
+      for h, v in six.iteritems(path_params):
         logging.info('%s: %s', h, v)
       logging.info('-path-parameters-end-')
       logging.info('body: %s', body)
@@ -177,7 +177,7 @@ class BaseModel(Model):
     """Logs debugging information about the response if requested."""
     if dump_request_response:
       logging.info('--response-start--')
-      for h, v in resp.iteritems():
+      for h, v in six.iteritems(resp):
         logging.info('%s: %s', h, v)
       if content:
         logging.info(content)
