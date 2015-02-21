@@ -27,7 +27,7 @@ __all__ = [
 
 
 # Standard library imports
-import StringIO
+from six import StringIO
 import copy
 from email.generator import Generator
 from email.mime.multipart import MIMEMultipart
@@ -38,17 +38,19 @@ import logging
 import mimetypes
 import os
 import re
+from six.moves.urllib import parse as urlparse
 import urllib
-import urlparse
+import six
 
-try:
-  from urlparse import parse_qsl
-except ImportError:
-  from cgi import parse_qsl
+from six.moves.urllib.parse import parse_qsl
+
+# Python 3 long-type
+if six.PY3:
+  long = int
 
 # Third-party imports
 import httplib2
-import mimeparse
+from . import mimeparse
 import uritemplate
 
 # Local imports
@@ -329,7 +331,7 @@ def _media_size_to_long(maxSize):
     The size as an integer value.
   """
   if len(maxSize) < 2:
-    return 0L
+    return long(0)
   units = maxSize[-2:].upper()
   bit_shift = _MEDIA_SIZE_BIT_SHIFTS.get(units)
   if bit_shift is not None:
@@ -732,7 +734,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
           msgRoot.attach(msg)
           # encode the body: note that we can't use `as_string`, because
           # it plays games with `From ` lines.
-          fp = StringIO.StringIO()
+          fp = StringIO()
           g = Generator(fp, mangle_from_=False)
           g.flatten(msgRoot, unixfrom=False)
           body = fp.getvalue()
