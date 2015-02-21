@@ -26,10 +26,12 @@ import httplib2
 import logging
 import os
 import unittest
-import urllib
+from six.moves import urllib
 import random
-import StringIO
+import six
+from six import StringIO
 import time
+import io
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import BatchError
@@ -133,7 +135,7 @@ class TestMediaUpload(unittest.TestCase):
     self.assertEqual(190, upload.size())
     self.assertEqual(True, upload.resumable())
     self.assertEqual(500, upload.chunksize())
-    self.assertEqual('PNG', upload.getbytes(1, 3))
+    self.assertEqual(six.u('PNG'), upload.getbytes(1, 3).decode("utf-8"))
 
     json = upload.to_json()
     new_upload = MediaUpload.new_from_json(json)
@@ -142,7 +144,7 @@ class TestMediaUpload(unittest.TestCase):
     self.assertEqual(190, new_upload.size())
     self.assertEqual(True, new_upload.resumable())
     self.assertEqual(500, new_upload.chunksize())
-    self.assertEqual('PNG', new_upload.getbytes(1, 3))
+    self.assertEqual(six.u('PNG'), new_upload.getbytes(1, 3).decode("utf-8"))
 
   def test_media_file_upload_raises_on_invalid_chunksize(self):
     self.assertRaises(InvalidChunkSizeError, MediaFileUpload,
@@ -194,33 +196,28 @@ class TestMediaUpload(unittest.TestCase):
 class TestMediaIoBaseUpload(unittest.TestCase):
 
   def test_media_io_base_upload_from_file_io(self):
-    try:
-      import io
-
-      fd = io.FileIO(datafile('small.png'), 'r')
-      upload = MediaIoBaseUpload(
-          fd=fd, mimetype='image/png', chunksize=500, resumable=True)
-      self.assertEqual('image/png', upload.mimetype())
-      self.assertEqual(190, upload.size())
-      self.assertEqual(True, upload.resumable())
-      self.assertEqual(500, upload.chunksize())
-      self.assertEqual('PNG', upload.getbytes(1, 3))
-    except ImportError:
-      pass
+    fd = io.FileIO(datafile('small.png'), 'rb')
+    upload = MediaIoBaseUpload(
+        fd=fd, mimetype='image/png', chunksize=500, resumable=True)
+    self.assertEqual('image/png', upload.mimetype())
+    self.assertEqual(190, upload.size())
+    self.assertEqual(True, upload.resumable())
+    self.assertEqual(500, upload.chunksize())
+    self.assertEqual(six.u('PNG'), upload.getbytes(1, 3).decode("utf-8"))
 
   def test_media_io_base_upload_from_file_object(self):
-    f = open(datafile('small.png'), 'r')
+    f = open(datafile('small.png'), 'rb')
     upload = MediaIoBaseUpload(
         fd=f, mimetype='image/png', chunksize=500, resumable=True)
     self.assertEqual('image/png', upload.mimetype())
     self.assertEqual(190, upload.size())
     self.assertEqual(True, upload.resumable())
     self.assertEqual(500, upload.chunksize())
-    self.assertEqual('PNG', upload.getbytes(1, 3))
+    self.assertEqual(six.u('PNG'), upload.getbytes(1, 3).decode("utf-8"))
     f.close()
 
   def test_media_io_base_upload_serializable(self):
-    f = open(datafile('small.png'), 'r')
+    f = open(datafile('small.png'), 'rb')
     upload = MediaIoBaseUpload(fd=f, mimetype='image/png')
 
     try:
@@ -230,8 +227,8 @@ class TestMediaIoBaseUpload(unittest.TestCase):
       pass
 
   def test_media_io_base_upload_from_string_io(self):
-    f = open(datafile('small.png'), 'r')
-    fd = StringIO.StringIO(f.read())
+    f = open(datafile('small.png'), 'rb')
+    fd = io.BytesIO(f.read())
     f.close()
 
     upload = MediaIoBaseUpload(
@@ -240,55 +237,35 @@ class TestMediaIoBaseUpload(unittest.TestCase):
     self.assertEqual(190, upload.size())
     self.assertEqual(True, upload.resumable())
     self.assertEqual(500, upload.chunksize())
-    self.assertEqual('PNG', upload.getbytes(1, 3))
+    self.assertEqual(six.u('PNG'), upload.getbytes(1, 3).decode("utf-8"))
     f.close()
 
   def test_media_io_base_upload_from_bytes(self):
-    try:
-      import io
-
-      f = open(datafile('small.png'), 'r')
-      fd = io.BytesIO(f.read())
-      upload = MediaIoBaseUpload(
-          fd=fd, mimetype='image/png', chunksize=500, resumable=True)
-      self.assertEqual('image/png', upload.mimetype())
-      self.assertEqual(190, upload.size())
-      self.assertEqual(True, upload.resumable())
-      self.assertEqual(500, upload.chunksize())
-      self.assertEqual('PNG', upload.getbytes(1, 3))
-    except ImportError:
-      pass
+    f = open(datafile('small.png'), 'rb')
+    fd = io.BytesIO(f.read())
+    upload = MediaIoBaseUpload(
+        fd=fd, mimetype='image/png', chunksize=500, resumable=True)
+    self.assertEqual('image/png', upload.mimetype())
+    self.assertEqual(190, upload.size())
+    self.assertEqual(True, upload.resumable())
+    self.assertEqual(500, upload.chunksize())
+    self.assertEqual(six.u('PNG'), upload.getbytes(1, 3).decode("utf-8"))
 
   def test_media_io_base_upload_raises_on_invalid_chunksize(self):
-    try:
-      import io
-
-      f = open(datafile('small.png'), 'r')
-      fd = io.BytesIO(f.read())
-      self.assertRaises(InvalidChunkSizeError, MediaIoBaseUpload,
-          fd, 'image/png', chunksize=-2, resumable=True)
-    except ImportError:
-      pass
+    f = open(datafile('small.png'), 'rb')
+    fd = io.BytesIO(f.read())
+    self.assertRaises(InvalidChunkSizeError, MediaIoBaseUpload,
+        fd, 'image/png', chunksize=-2, resumable=True)
 
   def test_media_io_base_upload_streamable(self):
-    try:
-      import io
-
-      fd = io.BytesIO('stuff')
-      upload = MediaIoBaseUpload(
-          fd=fd, mimetype='image/png', chunksize=500, resumable=True)
-      self.assertEqual(True, upload.has_stream())
-      self.assertEqual(fd, upload.stream())
-    except ImportError:
-      pass
+    fd = io.BytesIO('stuff'.encode("utf-8"))
+    upload = MediaIoBaseUpload(
+        fd=fd, mimetype='image/png', chunksize=500, resumable=True)
+    self.assertEqual(True, upload.has_stream())
+    self.assertEqual(fd, upload.stream())
 
   def test_media_io_base_next_chunk_retries(self):
-    try:
-      import io
-    except ImportError:
-      return
-
-    f = open(datafile('small.png'), 'r')
+    f = open(datafile('small.png'), 'rb')
     fd = io.BytesIO(f.read())
     upload = MediaIoBaseUpload(
         fd=fd, mimetype='image/png', chunksize=500, resumable=True)
@@ -331,7 +308,7 @@ class TestMediaIoBaseDownload(unittest.TestCase):
     http = HttpMock(datafile('zoo.json'), {'status': '200'})
     zoo = build('zoo', 'v1', http=http)
     self.request = zoo.animals().get_media(name='Lion')
-    self.fd = StringIO.StringIO()
+    self.fd = StringIO()
 
   def test_media_io_base_download(self):
     self.request.http = HttpMockSequence([
@@ -624,7 +601,7 @@ class TestHttpRequest(unittest.TestCase):
     request.execute(num_retries=num_retries)
 
     self.assertEqual(num_retries, len(sleeptimes))
-    for retry_num in xrange(num_retries):
+    for retry_num in range(num_retries):
       self.assertEqual(10 * 2**(retry_num + 1), sleeptimes[retry_num])
 
   def test_no_retry_fails_fast(self):
@@ -700,7 +677,7 @@ class TestBatch(unittest.TestCase):
 
   def test_serialize_request_media_body(self):
     batch = BatchHttpRequest()
-    f = open(datafile('small.png'))
+    f = open(datafile('small.png'), "rb")
     body = f.read()
     f.close()
 
@@ -938,7 +915,7 @@ class TestRequestUriTooLong(unittest.TestCase):
     req = HttpRequest(
         http,
         _postproc,
-        'http://example.com?' + urllib.urlencode(query),
+        'http://example.com?' + urllib.parse.urlencode(query),
         method='GET',
         body=None,
         headers={},
@@ -961,7 +938,7 @@ class TestStreamSlice(unittest.TestCase):
   """Test _StreamSlice."""
 
   def setUp(self):
-    self.stream = StringIO.StringIO('0123456789')
+    self.stream = StringIO('0123456789')
 
   def test_read(self):
     s =  _StreamSlice(self.stream, 0, 4)
