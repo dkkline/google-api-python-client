@@ -42,13 +42,13 @@ from email.generator import Generator
 from email.mime.multipart import MIMEMultipart
 from email.mime.nonmultipart import MIMENonMultipart
 from email.parser import FeedParser
-from errors import BatchError
-from errors import HttpError
-from errors import InvalidChunkSizeError
-from errors import ResumableUploadError
-from errors import UnexpectedBodyError
-from errors import UnexpectedMethodError
-from model import JsonModel
+from .errors import BatchError
+from .errors import HttpError
+from .errors import InvalidChunkSizeError
+from .errors import ResumableUploadError
+from .errors import UnexpectedBodyError
+from .errors import UnexpectedMethodError
+from .model import JsonModel
 from oauth2client import util
 
 
