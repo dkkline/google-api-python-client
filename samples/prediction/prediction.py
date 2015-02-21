@@ -129,7 +129,7 @@ def main(argv):
     for sample_text in ['mucho bueno', 'bonjour, mon cher ami']:
       body = {'input': {'csvInstance': [sample_text]}}
       result = papi.predict(
-        body=body, id=flags.model_id, project=flags.project_id).execute()
+          body=body, id=flags.model_id, project=flags.project_id).execute()
       print 'Prediction results for "%s"...' % sample_text
       pprint.pprint(result)
 

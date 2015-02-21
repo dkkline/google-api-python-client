@@ -364,7 +364,7 @@ class DiscoveryFromHttp(unittest.TestCase):
     os.environ['REMOTE_ADDR'] = '10.0.0.1'
     try:
       http = HttpMockSequence([
-        ({'status': '400'}, open(datafile('zoo.json'), 'rb').read()),
+                              ({'status': '400'}, open(datafile('zoo.json'), 'rb').read()),
         ])
       zoo = build('zoo', 'v1', http=http, developerKey='foo',
                   discoveryServiceUrl='http://example.com')
@@ -377,7 +377,7 @@ class DiscoveryFromHttp(unittest.TestCase):
     # out of the raised exception.
     try:
       http = HttpMockSequence([
-        ({'status': '400'}, open(datafile('zoo.json'), 'rb').read()),
+                              ({'status': '400'}, open(datafile('zoo.json'), 'rb').read()),
         ])
       zoo = build('zoo', 'v1', http=http, developerKey=None,
                   discoveryServiceUrl='http://example.com')
@@ -501,9 +501,9 @@ class Discovery(unittest.TestCase):
 
   def test_tunnel_patch(self):
     http = HttpMockSequence([
-      ({'status': '200'}, open(datafile('zoo.json'), 'rb').read()),
+                            ({'status': '200'}, open(datafile('zoo.json'), 'rb').read()),
       ({'status': '200'}, 'echo_request_headers_as_json'),
-      ])
+    ])
     http = tunnel_patch(http)
     zoo = build('zoo', 'v1', http=http)
     resp = zoo.animals().patch(
@@ -662,7 +662,7 @@ class Discovery(unittest.TestCase):
     self.assertEquals(request.resumable_uri, None)
 
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'location': 'http://upload.example.com'}, ''),
       ({'status': '308',
         'location': 'http://upload.example.com/2',
@@ -671,7 +671,7 @@ class Discovery(unittest.TestCase):
         'location': 'http://upload.example.com/3',
         'range': '0-%d' % (media_upload.size() - 2)}, ''),
       ({'status': '200'}, '{"foo": "bar"}'),
-      ])
+    ])
 
     status, body = request.next_chunk(http=http)
     self.assertEquals(None, body)
@@ -711,7 +711,7 @@ class Discovery(unittest.TestCase):
     self.assertEquals(request.resumable_uri, None)
 
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'location': 'http://upload.example.com'}, ''),
       ({'status': '308',
         'location': 'http://upload.example.com/2',
@@ -720,7 +720,7 @@ class Discovery(unittest.TestCase):
         'location': 'http://upload.example.com/3',
         'range': '0-%d' % (media_upload.size() - 2)}, ''),
       ({'status': '200'}, '{"foo": "bar"}'),
-      ])
+    ])
 
     status, body = request.next_chunk(http=http)
     self.assertEquals(None, body)
@@ -756,7 +756,7 @@ class Discovery(unittest.TestCase):
         request.uri)
 
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'location': 'http://upload.example.com'}, ''),
       ({'status': '308',
         'location': 'http://upload.example.com/2',
@@ -765,7 +765,7 @@ class Discovery(unittest.TestCase):
         'location': 'http://upload.example.com/3',
         'range': '0-%d' % media_upload.size()}, ''),
       ({'status': '200'}, '{"foo": "bar"}'),
-      ])
+    ])
 
     body = request.execute(http=http)
     self.assertEquals(body, {"foo": "bar"})
@@ -779,7 +779,7 @@ class Discovery(unittest.TestCase):
     request = zoo.animals().insert(media_body=media_upload, body=None)
 
     http = HttpMockSequence([
-      ({'status': '400',
+                            ({'status': '400',
         'location': 'http://upload.example.com'}, ''),
       ])
 
@@ -798,20 +798,20 @@ class Discovery(unittest.TestCase):
     request = zoo.animals().insert(media_body=media_upload, body=None)
 
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'location': 'http://upload.example.com'}, ''),
       ({'status': '400'}, ''),
-      ])
+    ])
 
     self.assertRaises(HttpError, request.execute, http=http)
     self.assertTrue(request._in_error_state)
 
     http = HttpMockSequence([
-      ({'status': '308',
+                            ({'status': '308',
         'range': '0-5'}, ''),
       ({'status': '308',
         'range': '0-6'}, ''),
-      ])
+    ])
 
     status, body = request.next_chunk(http=http)
     self.assertEquals(status.resumable_progress, 7,
@@ -820,14 +820,14 @@ class Discovery(unittest.TestCase):
 
     # Put it back in an error state.
     http = HttpMockSequence([
-      ({'status': '400'}, ''),
+                            ({'status': '400'}, ''),
       ])
     self.assertRaises(HttpError, request.execute, http=http)
     self.assertTrue(request._in_error_state)
 
     # Pretend the last request that 400'd actually succeeded.
     http = HttpMockSequence([
-      ({'status': '200'}, '{"foo": "bar"}'),
+                            ({'status': '200'}, '{"foo": "bar"}'),
       ])
     status, body = request.next_chunk(http=http)
     self.assertEqual(body, {'foo': 'bar'})
@@ -848,13 +848,13 @@ class Discovery(unittest.TestCase):
 
       # The single chunk fails, restart at the right point.
       http = HttpMockSequence([
-        ({'status': '200',
+                              ({'status': '200',
           'location': 'http://upload.example.com'}, ''),
         ({'status': '308',
           'location': 'http://upload.example.com/2',
           'range': '0-4'}, ''),
         ({'status': '200'}, 'echo_request_body'),
-        ])
+      ])
 
       body = request.execute(http=http)
       self.assertEqual('56789', body)
@@ -879,10 +879,10 @@ class Discovery(unittest.TestCase):
 
       # The single chunk fails, pull the content sent out of the exception.
       http = HttpMockSequence([
-        ({'status': '200',
+                              ({'status': '200',
           'location': 'http://upload.example.com'}, ''),
         ({'status': '400'}, 'echo_request_body'),
-        ])
+      ])
 
       try:
         body = request.execute(http=http)
@@ -895,10 +895,10 @@ class Discovery(unittest.TestCase):
 
   def test_resumable_media_handle_uploads_of_unknown_size(self):
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'location': 'http://upload.example.com'}, ''),
       ({'status': '200'}, 'echo_request_headers_as_json'),
-      ])
+    ])
 
     self.http = HttpMock(datafile('zoo.json'), {'status': '200'})
     zoo = build('zoo', 'v1', http=self.http)
@@ -963,10 +963,10 @@ class Discovery(unittest.TestCase):
     request = zoo.animals().insert(media_body=upload, body=None)
 
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'location': 'http://upload.example.com'}, ''),
       ({'status': '200'}, 'echo_request_headers_as_json'),
-      ])
+    ])
 
     # This should not raise an exception because stream() shouldn't be called.
     status, body = request.next_chunk(http=http)
@@ -981,10 +981,10 @@ class Discovery(unittest.TestCase):
 
     # This should raise an exception because stream() will be called.
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'location': 'http://upload.example.com'}, ''),
       ({'status': '200'}, 'echo_request_headers_as_json'),
-      ])
+    ])
 
     self.assertRaises(NotImplementedError, request.next_chunk, http=http)
 
@@ -992,10 +992,10 @@ class Discovery(unittest.TestCase):
 
   def test_resumable_media_handle_uploads_of_unknown_size_eof(self):
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'location': 'http://upload.example.com'}, ''),
       ({'status': '200'}, 'echo_request_headers_as_json'),
-      ])
+    ])
 
     self.http = HttpMock(datafile('zoo.json'), {'status': '200'})
     zoo = build('zoo', 'v1', http=self.http)
@@ -1015,10 +1015,10 @@ class Discovery(unittest.TestCase):
 
   def test_resumable_media_handle_resume_of_upload_of_unknown_size(self):
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'location': 'http://upload.example.com'}, ''),
       ({'status': '400'}, ''),
-      ])
+    ])
 
     self.http = HttpMock(datafile('zoo.json'), {'status': '200'})
     zoo = build('zoo', 'v1', http=self.http)
@@ -1035,7 +1035,7 @@ class Discovery(unittest.TestCase):
     self.assertRaises(HttpError, request.next_chunk, http=http)
 
     http = HttpMockSequence([
-      ({'status': '400',
+                            ({'status': '400',
         'range': '0-5'}, 'echo_request_headers_as_json'),
       ])
     try:
@@ -1181,7 +1181,7 @@ class MediaGet(unittest.TestCase):
     self.assertEqual(request.headers['accept'], '*/*')
 
     http = HttpMockSequence([
-      ({'status': '200'}, 'standing in for media'),
+                            ({'status': '200'}, 'standing in for media'),
       ])
     response = request.execute(http=http)
     self.assertEqual('standing in for media', response)

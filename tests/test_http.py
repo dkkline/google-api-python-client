@@ -108,7 +108,7 @@ class TestUserAgent(unittest.TestCase):
 
   def test_set_user_agent(self):
     http = HttpMockSequence([
-      ({'status': '200'}, 'echo_request_headers'),
+                            ({'status': '200'}, 'echo_request_headers'),
       ])
 
     http = set_user_agent(http, "my_app/5.5")
@@ -117,7 +117,7 @@ class TestUserAgent(unittest.TestCase):
 
   def test_set_user_agent_nested(self):
     http = HttpMockSequence([
-      ({'status': '200'}, 'echo_request_headers'),
+                            ({'status': '200'}, 'echo_request_headers'),
       ])
 
     http = set_user_agent(http, "my_app/5.5")
@@ -273,7 +273,7 @@ class TestMediaIoBaseUpload(unittest.TestCase):
     # Simulate 5XXs for both the request that creates the resumable upload and
     # the upload itself.
     http = HttpMockSequence([
-      ({'status': '500'}, ''),
+                            ({'status': '500'}, ''),
       ({'status': '500'}, ''),
       ({'status': '503'}, ''),
       ({'status': '200', 'location': 'location'}, ''),
@@ -312,7 +312,7 @@ class TestMediaIoBaseDownload(unittest.TestCase):
 
   def test_media_io_base_download(self):
     self.request.http = HttpMockSequence([
-      ({'status': '200',
+                                         ({'status': '200',
         'content-range': '0-2/5'}, '123'),
       ({'status': '200',
         'content-range': '3-4/5'}, '45'),
@@ -346,7 +346,7 @@ class TestMediaIoBaseDownload(unittest.TestCase):
 
   def test_media_io_base_download_handle_redirects(self):
     self.request.http = HttpMockSequence([
-      ({'status': '200',
+                                         ({'status': '200',
         'content-location': 'https://secure.example.net/lion'}, ''),
       ({'status': '200',
         'content-range': '0-2/5'}, 'abc'),
@@ -361,7 +361,7 @@ class TestMediaIoBaseDownload(unittest.TestCase):
 
   def test_media_io_base_download_handle_4xx(self):
     self.request.http = HttpMockSequence([
-      ({'status': '400'}, ''),
+                                         ({'status': '400'}, ''),
     ])
 
     download = MediaIoBaseDownload(
@@ -375,7 +375,7 @@ class TestMediaIoBaseDownload(unittest.TestCase):
 
     # Even after raising an exception we can pick up where we left off.
     self.request.http = HttpMockSequence([
-      ({'status': '200',
+                                         ({'status': '200',
         'content-range': '0-2/5'}, '123'),
     ])
 
@@ -385,7 +385,7 @@ class TestMediaIoBaseDownload(unittest.TestCase):
 
   def test_media_io_base_download_retries_5xx(self):
     self.request.http = HttpMockSequence([
-      ({'status': '500'}, ''),
+                                         ({'status': '500'}, ''),
       ({'status': '500'}, ''),
       ({'status': '500'}, ''),
       ({'status': '200',
@@ -750,7 +750,7 @@ class TestBatch(unittest.TestCase):
     batch.add(self.request1, callback=callbacks.f)
     batch.add(self.request2, callback=callbacks.f)
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
        BATCH_RESPONSE),
       ])
@@ -766,7 +766,7 @@ class TestBatch(unittest.TestCase):
     batch.add(self.request1)
     batch.add(self.request2)
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
         'echo_request_body'),
       ])
@@ -790,13 +790,13 @@ class TestBatch(unittest.TestCase):
     cred_2 = MockCredentials('Bar')
 
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
        BATCH_RESPONSE_WITH_401),
       ({'status': '200',
         'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
        BATCH_SINGLE_RESPONSE),
-      ])
+    ])
 
     creds_http_1 = HttpMockSequence([])
     cred_1.authorize(creds_http_1)
@@ -832,13 +832,13 @@ class TestBatch(unittest.TestCase):
     cred_2 = MockCredentials('Bar')
 
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
        BATCH_RESPONSE_WITH_401),
       ({'status': '200',
         'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
        BATCH_RESPONSE_WITH_401),
-      ])
+    ])
 
     creds_http_1 = HttpMockSequence([])
     cred_1.authorize(creds_http_1)
@@ -867,7 +867,7 @@ class TestBatch(unittest.TestCase):
     batch.add(self.request1)
     batch.add(self.request2)
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
        BATCH_RESPONSE),
       ])
@@ -882,7 +882,7 @@ class TestBatch(unittest.TestCase):
     batch.add(self.request1)
     batch.add(self.request2)
     http = HttpMockSequence([
-      ({'status': '200',
+                            ({'status': '200',
         'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
        BATCH_ERROR_RESPONSE),
       ])
@@ -902,11 +902,11 @@ class TestRequestUriTooLong(unittest.TestCase):
       return content
 
     http = HttpMockSequence([
-      ({'status': '200'},
+                            ({'status': '200'},
         'echo_request_body'),
       ({'status': '200'},
         'echo_request_headers'),
-      ])
+    ])
 
     # Send a long query parameter.
     query = {

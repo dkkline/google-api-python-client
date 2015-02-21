@@ -103,8 +103,8 @@ class AboutHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication(
     [
-     ('/', MainHandler),
-     ('/about', AboutHandler),
-     (decorator.callback_path, decorator.callback_handler()),
+        ('/', MainHandler),
+        ('/about', AboutHandler),
+        (decorator.callback_path, decorator.callback_handler()),
     ],
     debug=True)

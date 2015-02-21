@@ -109,34 +109,34 @@ class SchemasTest(unittest.TestCase):
     feed = {
         'items': [ {
             'photo': {
-              'hash': 'A String',
-              'hashAlgorithm': 'A String',
-              'filename': 'A String',
-              'type': 'A String',
-              'size': 42
-              },
+        'hash': 'A String',
+        'hashAlgorithm': 'A String',
+        'filename': 'A String',
+        'type': 'A String',
+        'size': 42
+            },
             'kind': 'zoo#animal',
             'etag': 'A String',
             'name': 'A String'
-          }
+        }
         ],
         'kind': 'zoo#animalFeed',
         'etag': 'A String'
-      }
+    }
 
     self.assertEqual(feed, eval(self.sc.prettyPrintByName('AnimalFeed')))
 
   def test_additional_properties(self):
     items = {
         'animals': {
-          'a_key': {
+            'a_key': {
             'photo': {
-              'hash': 'A String',
-              'hashAlgorithm': 'A String',
-              'filename': 'A String',
-              'type': 'A String',
-              'size': 42
-              },
+                'hash': 'A String',
+                'hashAlgorithm': 'A String',
+                'filename': 'A String',
+                'type': 'A String',
+                'size': 42
+            },
             'kind': 'zoo#animal',
             'etag': 'A String',
             'name': 'A String'
@@ -144,7 +144,7 @@ class SchemasTest(unittest.TestCase):
         },
         'kind': 'zoo#animalMap',
         'etag': 'A String'
-      }
+    }
 
     self.assertEqual(items, eval(self.sc.prettyPrintByName('AnimalMap')))
 

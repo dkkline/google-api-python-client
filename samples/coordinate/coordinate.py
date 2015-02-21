@@ -87,7 +87,7 @@ def main(argv):
     update_result = service.jobs().update(body='',
       teamId=flags.teamId,
       jobId=insert_result['id'],
-      progress='COMPLETED').execute()
+        progress='COMPLETED').execute()
 
     pprint.pprint(update_result)
 
