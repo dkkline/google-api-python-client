@@ -38,8 +38,7 @@ import logging
 import mimetypes
 import os
 import re
-from six.moves.urllib import parse as urlparse
-import urllib
+from six.moves import urllib
 import six
 
 from six.moves.urllib.parse import parse_qsl
@@ -198,6 +197,8 @@ def build(serviceName,
   logger.info('URL being requested: GET %s' % requested_url)
 
   resp, content = http.request(requested_url)
+  if isinstance(content, bytes):  # Decode if bytes
+    content = content.decode("utf-8")
 
   if resp.status == 404:
     raise UnknownApiNameOrVersion("name: %s  version: %s" % (serviceName,
@@ -257,7 +258,7 @@ def build_from_document(
 
   if isinstance(service, six.string_types):
     service = json.loads(service)
-  base = urlparse.urljoin(service['rootUrl'], service['servicePath'])
+  base = urllib.parse.urljoin(service['rootUrl'], service['servicePath'])
   schema = Schemas(service)
 
   if credentials:
@@ -606,7 +607,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
         raise TypeError('Got an unexpected keyword argument "%s"' % name)
 
     # Remove args that have a value of None.
-    keys = kwargs.keys()
+    keys = list(kwargs.keys())
     for name in keys:
       if kwargs[name] is None:
         del kwargs[name]
@@ -617,7 +618,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
 
     for name, regex in six.iteritems(parameters.pattern_params):
       if name in kwargs:
-        if isinstance(kwargs[name], basestring):
+        if isinstance(kwargs[name], six.string_types):
           pvalues = [kwargs[name]]
         else:
           pvalues = kwargs[name]
@@ -673,14 +674,14 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
         actual_path_params, actual_query_params, body_value)
 
     expanded_url = uritemplate.expand(pathUrl, params)
-    url = urlparse.urljoin(self._baseUrl, expanded_url + query)
+    url = urllib.parse.urljoin(self._baseUrl, expanded_url + query)
 
     resumable = None
     multipart_boundary = ''
 
     if media_filename:
       # Ensure we end up with a valid MediaUpload object.
-      if isinstance(media_filename, basestring):
+      if isinstance(media_filename, six.string_types):
         (media_mime_type, encoding) = mimetypes.guess_type(media_filename)
         if media_mime_type is None:
           raise UnknownFileType(media_filename)
@@ -694,12 +695,12 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
         raise TypeError('media_filename must be str or MediaUpload.')
 
       # Check the maxSize
-      if maxSize > 0 and media_upload.size() > maxSize:
+      if maxSize > 0 and media_upload.size() is not None and media_upload.size() > maxSize:
         raise MediaUploadSizeError("Media larger than: %s" % maxSize)
 
       # Use the media path uri for media uploads
       expanded_url = uritemplate.expand(mediaPathUrl, params)
-      url = urlparse.urljoin(self._baseUrl, expanded_url + query)
+      url = urllib.parse.urljoin(self._baseUrl, expanded_url + query)
       if media_upload.resumable():
         url = _add_query_parameter(url, 'uploadType', 'resumable')
 
@@ -841,14 +842,14 @@ Returns:
     request = copy.copy(previous_request)
 
     pageToken = previous_response['nextPageToken']
-    parsed = list(urlparse.urlparse(request.uri))
+    parsed = list(urllib.parse.urlparse(request.uri))
     q = parse_qsl(parsed[4])
 
     # Find and remove old 'pageToken' value from URI
     newq = [(key, value) for (key, value) in q if key != 'pageToken']
     newq.append(('pageToken', pageToken))
-    parsed[4] = urllib.urlencode(newq)
-    uri = urlparse.urlunparse(parsed)
+    parsed[4] = urllib.parse.urlencode(newq)
+    uri = urllib.parse.urlunparse(parsed)
 
     request.uri = uri
 
