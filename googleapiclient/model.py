@@ -27,6 +27,7 @@ __author__ = 'jcgregorio@google.com (Joe Gregorio)'
 import json
 import logging
 import urllib
+import six
 
 from googleapiclient import __version__
 from .errors import HttpError
@@ -161,7 +162,7 @@ class BaseModel(Model):
     if self.alt_param is not None:
       params.update({'alt': self.alt_param})
     astuples = []
-    for key, value in params.iteritems():
+    for key, value in six.iteritems(params):
       if type(value) == type([]):
         for x in value:
           x = x.encode('utf-8')
