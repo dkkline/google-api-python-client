@@ -30,11 +30,7 @@ from googleapiclient import __version__
 from googleapiclient.errors import HttpError
 from googleapiclient.model import JsonModel
 
-# Python 2.5 requires different modules
-try:
-    from urlparse import parse_qs
-except ImportError:
-    from cgi import parse_qs
+from six.moves import urllib
 
 
 class Model(unittest.TestCase):
@@ -119,7 +115,7 @@ class Model(unittest.TestCase):
         self.assertEqual(headers['accept'], 'application/json')
         self.assertEqual(headers['content-type'], 'application/json')
 
-        query_dict = parse_qs(query[1:])
+        query_dict = urllib.parse.parse_qs(query[1:])
         self.assertEqual(query_dict['foo'], ['1'])
         self.assertEqual(query_dict['bar'], [u'\N{COMET}'.encode('utf-8')])
         self.assertEqual(query_dict['baz'], ['fe', 'fi', 'fo', 'fum'])

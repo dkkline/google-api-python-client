@@ -26,10 +26,10 @@ import httplib2
 import logging
 import os
 import unittest
-import urllib
 import random
 import time
 from six import StringIO
+from six.moves import urllib
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import BatchError
@@ -938,7 +938,7 @@ class TestRequestUriTooLong(unittest.TestCase):
         req = HttpRequest(
             http,
             _postproc,
-            'http://example.com?' + urllib.urlencode(query),
+            'http://example.com?' + urllib.parse.urlencode(query),
             method='GET',
             body=None,
             headers={},

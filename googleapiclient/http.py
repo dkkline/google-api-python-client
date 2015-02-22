@@ -31,10 +31,9 @@ import os
 import random
 import sys
 import time
-import urllib
-import urlparse
 import uuid
 from six import StringIO
+from six.moves import urllib
 
 from email.generator import Generator
 from email.mime.multipart import MIMEMultipart
@@ -697,8 +696,8 @@ class HttpRequest(object):
             self.method = 'POST'
             self.headers['x-http-method-override'] = 'GET'
             self.headers['content-type'] = 'application/x-www-form-urlencoded'
-            parsed = urlparse.urlparse(self.uri)
-            self.uri = urlparse.urlunparse((parsed.scheme, parsed.netloc,
+            parsed = urllib.parse.urlparse(self.uri)
+            self.uri = urllib.parse.urlunparse((parsed.scheme, parsed.netloc,
                                            parsed.path, parsed.params, None,
                                            None))
             self.body = parsed.query
@@ -1045,7 +1044,7 @@ class BatchHttpRequest(object):
         if self._base_id is None:
             self._base_id = uuid.uuid4()
 
-        return '<%s+%s>' % (self._base_id, urllib.quote(id_))
+        return '<%s+%s>' % (self._base_id, urllib.parse.quote(id_))
 
     def _header_to_id(self, header):
         """Convert a Content-ID header value to an id.
@@ -1068,7 +1067,7 @@ class BatchHttpRequest(object):
             raise BatchError("Invalid value for Content-ID: %s" % header)
         base, id_ = header[1:-1].rsplit('+', 1)
 
-        return urllib.unquote(id_)
+        return urllib.parse.unquote(id_)
 
     def _serialize_request(self, request):
         """Convert an HttpRequest object into a string.
@@ -1080,8 +1079,8 @@ class BatchHttpRequest(object):
           The request as a string in application/http format.
         """
         # Construct status line
-        parsed = urlparse.urlparse(request.uri)
-        request_line = urlparse.urlunparse((None, None, parsed.path,
+        parsed = urllib.parse.urlparse(request.uri)
+        request_line = urllib.parse.urlunparse((None, None, parsed.path,
                                            parsed.params, parsed.query, None))
         status_line = request.method + ' ' + request_line + ' HTTP/1.1\n'
         major, minor = request.headers.get('content-type', 'application/json').split('/')
