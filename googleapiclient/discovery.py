@@ -601,7 +601,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
                 raise TypeError('Got an unexpected keyword argument "%s"' % name)
 
         # Remove args that have a value of None.
-        keys = kwargs.keys()
+        keys = list(kwargs.keys())
         for name in keys:
             if kwargs[name] is None:
                 del kwargs[name]
