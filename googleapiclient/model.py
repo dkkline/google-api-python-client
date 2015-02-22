@@ -168,7 +168,7 @@ class BaseModel(Model):
                     x = x.encode('utf-8')
                     astuples.append((key, x))
             else:
-                if isinstance(value, unicode) and callable(value.encode):
+                if isinstance(value, six.text_type) and callable(value.encode):
                     value = value.encode('utf-8')
                 astuples.append((key, value))
         return '?' + urllib.parse.urlencode(astuples)
