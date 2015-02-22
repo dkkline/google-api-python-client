@@ -29,6 +29,7 @@ __license__ = 'MIT License'
 __credits__ = ''
 
 import six
+from functools import reduce
 
 
 def parse_mime_type(mime_type):
