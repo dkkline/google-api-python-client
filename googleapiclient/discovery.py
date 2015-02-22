@@ -691,7 +691,10 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
                 raise TypeError('media_filename must be str or MediaUpload.')
 
             # Check the maxSize
-            if maxSize > 0 and media_upload.size() > maxSize:
+            # media_upload.size() = None means unknown size.
+            # Unknown media-size should 'pass through'.
+            if (maxSize > 0 and media_upload.size() is not None
+                    and media_upload.size() > maxSize):
                 raise MediaUploadSizeError("Media larger than: %s" % maxSize)
 
             # Use the media path uri for media uploads
