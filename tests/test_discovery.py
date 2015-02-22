@@ -494,7 +494,7 @@ class Discovery(unittest.TestCase):
 
     def test_tunnel_patch(self):
         http = HttpMockSequence([
-                                ({'status': '200'}, open(datafile('zoo.json'), 'rb').read()),
+                                ({'status': '200'}, open(datafile('zoo.json'), 'r').read()),
                                ({'status': '200'}, 'echo_request_headers_as_json'),
                                 ])
         http = tunnel_patch(http)
