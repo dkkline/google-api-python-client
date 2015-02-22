@@ -27,6 +27,7 @@ __author__ = 'jcgregorio@google.com (Joe Gregorio)'
 import json
 import logging
 from six.moves import urllib
+from six.moves import xrange
 import six
 
 from googleapiclient import __version__

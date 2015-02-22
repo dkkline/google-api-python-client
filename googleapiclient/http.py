@@ -34,6 +34,7 @@ import time
 import uuid
 from six import StringIO
 from six.moves import urllib
+from six.moves import xrange
 import six
 
 from email.generator import Generator

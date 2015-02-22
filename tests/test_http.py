@@ -30,6 +30,7 @@ import random
 import time
 from six import StringIO
 from six.moves import urllib
+from six.moves import xrange
 
 from googleapiclient.discovery import build
 from googleapiclient.errors import BatchError
