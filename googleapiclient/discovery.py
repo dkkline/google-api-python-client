@@ -39,6 +39,7 @@ import os
 import re
 from six.moves import urllib
 from six import StringIO
+import six
 
 # Third-party imports
 import httplib2
@@ -381,7 +382,7 @@ def _fix_up_parameters(method_desc, root_desc, http_method):
     parameters = method_desc.setdefault('parameters', {})
 
     # Add in the parameters common to all methods.
-    for name, description in root_desc.get('parameters', {}).iteritems():
+    for name, description in six.iteritems(root_desc.get('parameters', {})):
         parameters[name] = description
 
     # Add in undocumented query parameters.
@@ -547,7 +548,7 @@ class ResourceMethodParameters(object):
               comes from the dictionary of methods stored in the 'methods' key in
               the deserialized discovery document.
         """
-        for arg, desc in method_desc.get('parameters', {}).iteritems():
+        for arg, desc in six.iteritems(method_desc.get('parameters', {})):
             param = key2param(arg)
             self.argmap[param] = arg
 
@@ -609,7 +610,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
             if name not in kwargs:
                 raise TypeError('Missing required parameter "%s"' % name)
 
-        for name, regex in parameters.pattern_params.iteritems():
+        for name, regex in six.iteritems(parameters.pattern_params):
             if name in kwargs:
                 if isinstance(kwargs[name], basestring):
                     pvalues = [kwargs[name]]
@@ -621,7 +622,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
                             'Parameter "%s" value "%s" does not match the pattern "%s"' %
                             (name, pvalue, regex))
 
-        for name, enums in parameters.enum_params.iteritems():
+        for name, enums in six.iteritems(parameters.enum_params):
             if name in kwargs:
                 # We need to handle the case of a repeated enum
                 # name differently, since we want to handle both
@@ -639,7 +640,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
 
         actual_query_params = {}
         actual_path_params = {}
-        for key, value in kwargs.iteritems():
+        for key, value in six.iteritems(kwargs):
             to_type = parameters.param_types.get(key, 'string')
             # For repeated parameters we cast each member of the list.
             if key in parameters.repeated_params and type(value) == type([]):
@@ -930,7 +931,7 @@ class Resource(object):
     def _add_basic_methods(self, resourceDesc, rootDesc, schema):
         # Add basic methods to Resource
         if 'methods' in resourceDesc:
-            for methodName, methodDesc in resourceDesc['methods'].iteritems():
+            for methodName, methodDesc in six.iteritems(resourceDesc['methods']):
                 fixedMethodName, method = createMethod(
                     methodName, methodDesc, rootDesc, schema)
                 self._set_dynamic_attr(fixedMethodName,
@@ -969,7 +970,7 @@ class Resource(object):
 
                 return (methodName, methodResource)
 
-            for methodName, methodDesc in resourceDesc['resources'].iteritems():
+            for methodName, methodDesc in six.iteritems(resourceDesc['resources']):
                 fixedMethodName, method = createResourceMethod(methodName, methodDesc)
                 self._set_dynamic_attr(fixedMethodName,
                                        method.__get__(self, self.__class__))
@@ -979,7 +980,7 @@ class Resource(object):
         # Look for response bodies in schema that contain nextPageToken, and methods
         # that take a pageToken parameter.
         if 'methods' in resourceDesc:
-            for methodName, methodDesc in resourceDesc['methods'].iteritems():
+            for methodName, methodDesc in six.iteritems(resourceDesc['methods']):
                 if 'response' in methodDesc:
                     responseSchema = methodDesc['response']
                     if '$ref' in responseSchema:

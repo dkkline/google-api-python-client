@@ -36,5 +36,6 @@ _SUBMODULES = {
 }
 
 import sys
-for module_name, module in _SUBMODULES.iteritems():
+import six
+for module_name, module in six.iteritems(_SUBMODULES):
     sys.modules['apiclient.%s' % module_name] = module

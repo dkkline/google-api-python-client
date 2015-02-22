@@ -34,6 +34,7 @@ import time
 import uuid
 from six import StringIO
 from six.moves import urllib
+import six
 
 from email.generator import Generator
 from email.mime.multipart import MIMEMultipart
@@ -1095,7 +1096,7 @@ class BatchHttpRequest(object):
         if 'content-type' in headers:
             del headers['content-type']
 
-        for key, value in headers.iteritems():
+        for key, value in six.iteritems(headers):
             msg[key] = value
         msg['Host'] = parsed.netloc
         msg.set_unixfrom(None)

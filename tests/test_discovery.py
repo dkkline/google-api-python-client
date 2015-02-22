@@ -33,6 +33,7 @@ import sys
 import unittest
 from six import StringIO
 from six.moves import urllib
+import six
 
 from googleapiclient.discovery import _fix_up_media_upload
 from googleapiclient.discovery import _fix_up_method_description
@@ -125,7 +126,7 @@ class Utilities(unittest.TestCase):
             self.assertEqual(STACK_QUERY_PARAMETER_DEFAULT_VALUE,
                              parameters[param_name])
 
-        for param_name, value in root_desc.get('parameters', {}).iteritems():
+        for param_name, value in six.iteritems(root_desc.get('parameters', {})):
             self.assertEqual(value, parameters[param_name])
 
         return parameters

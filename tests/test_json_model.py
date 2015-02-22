@@ -31,6 +31,7 @@ from googleapiclient.errors import HttpError
 from googleapiclient.model import JsonModel
 
 from six.moves import urllib
+import six
 
 
 class Model(unittest.TestCase):
@@ -208,7 +209,7 @@ class Model(unittest.TestCase):
             def __init__(self, items):
                 super(MockResponse, self).__init__()
                 self.status = items['status']
-                for key, value in items.iteritems():
+                for key, value in six.iteritems(items):
                     self[key] = value
         old_logging = googleapiclient.model.logging
         googleapiclient.model.logging = MockLogging()
