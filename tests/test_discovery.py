@@ -135,7 +135,7 @@ class Utilities(unittest.TestCase):
         parameters = self._base_fix_up_parameters_test(self.zoo_get_method_desc,
                                                        'GET', self.zoo_root_desc)
         # Since http_method is 'GET'
-        self.assertFalse(parameters.has_key('body'))
+        self.assertFalse("body" in parameters)
 
     def test_fix_up_parameters_insert(self):
         parameters = self._base_fix_up_parameters_test(self.zoo_insert_method_desc,
@@ -158,15 +158,15 @@ class Utilities(unittest.TestCase):
 
         parameters = _fix_up_parameters(invalid_method_desc, dummy_root_desc,
                                         no_payload_http_method)
-        self.assertFalse(parameters.has_key('body'))
+        self.assertFalse("body" in parameters)
 
         parameters = _fix_up_parameters(valid_method_desc, dummy_root_desc,
                                         no_payload_http_method)
-        self.assertFalse(parameters.has_key('body'))
+        self.assertFalse("body" in parameters)
 
         parameters = _fix_up_parameters(invalid_method_desc, dummy_root_desc,
                                         with_payload_http_method)
-        self.assertFalse(parameters.has_key('body'))
+        self.assertFalse("body" in parameters)
 
         parameters = _fix_up_parameters(valid_method_desc, dummy_root_desc,
                                         with_payload_http_method)
