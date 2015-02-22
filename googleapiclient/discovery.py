@@ -756,8 +756,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
         docs.append('Args:\n')
 
     # Skip undocumented params and params common to all methods.
-    skip_parameters = rootDesc.get('parameters', {}).keys()
-    skip_parameters.extend(STACK_QUERY_PARAMETERS)
+    skip_parameters = list(rootDesc.get('parameters', {}).keys())
 
     all_args = parameters.argmap.keys()
     args_ordered = [key2param(s) for s in methodDesc.get('parameterOrder', [])]
