@@ -32,7 +32,7 @@ import pickle
 import sys
 import unittest
 import urlparse
-import StringIO
+from six import StringIO
 
 
 try:
@@ -998,7 +998,7 @@ class Discovery(unittest.TestCase):
         self.http = HttpMock(datafile('zoo.json'), {'status': '200'})
         zoo = build('zoo', 'v1', http=self.http)
 
-        fd = StringIO.StringIO('data goes here')
+        fd = StringIO('data goes here')
 
         # Create an upload that doesn't know the full size of the media.
         upload = MediaIoBaseUpload(
@@ -1022,7 +1022,7 @@ class Discovery(unittest.TestCase):
         zoo = build('zoo', 'v1', http=self.http)
 
         # Create an upload that doesn't know the full size of the media.
-        fd = StringIO.StringIO('data goes here')
+        fd = StringIO('data goes here')
 
         upload = MediaIoBaseUpload(
             fd=fd, mimetype='image/png', chunksize=500, resumable=True)

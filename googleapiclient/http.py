@@ -21,7 +21,6 @@ actuall HTTP request.
 
 __author__ = 'jcgregorio@google.com (Joe Gregorio)'
 
-import StringIO
 import copy
 import httplib2
 import json
@@ -35,6 +34,7 @@ import time
 import urllib
 import urlparse
 import uuid
+from six import StringIO
 
 from email.generator import Generator
 from email.mime.multipart import MIMEMultipart
@@ -463,7 +463,7 @@ class MediaInMemoryUpload(MediaIoBaseUpload):
         resumable: bool, True if this is a resumable upload. False means upload
           in a single request.
         """
-        fd = StringIO.StringIO(body)
+        fd = StringIO(body)
         super(MediaInMemoryUpload, self).__init__(fd, mimetype, chunksize=chunksize,
                                                   resumable=resumable)
 
@@ -1106,7 +1106,7 @@ class BatchHttpRequest(object):
             msg['content-length'] = str(len(request.body))
 
         # Serialize the mime message.
-        fp = StringIO.StringIO()
+        fp = StringIO()
         # maxheaderlen=0 means don't line wrap headers.
         g = Generator(fp, maxheaderlen=0)
         g.flatten(msg, unixfrom=False)
@@ -1229,7 +1229,7 @@ class BatchHttpRequest(object):
 
         # encode the body: note that we can't use `as_string`, because
         # it plays games with `From ` lines.
-        fp = StringIO.StringIO()
+        fp = StringIO()
         g = Generator(fp, mangle_from_=False)
         g.flatten(message, unixfrom=False)
         body = fp.getvalue()
