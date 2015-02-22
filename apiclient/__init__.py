@@ -3,7 +3,7 @@
 import googleapiclient
 
 try:
-    import oauth2client
+    import oauth2client  # noqa, as we're using this as a check
 except ImportError:
     raise RuntimeError(
         'Previous version of google-api-python-client detected; due to a '

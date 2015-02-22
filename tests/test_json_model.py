@@ -21,9 +21,7 @@ Unit tests for the JSON model.
 
 __author__ = 'jcgregorio@google.com (Joe Gregorio)'
 
-import copy
 import json
-import os
 import unittest
 import httplib2
 import googleapiclient.model

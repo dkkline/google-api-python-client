@@ -23,16 +23,9 @@ __author__ = 'mmcdonald@google.com (Matt McDonald)'
 
 import unittest
 import httplib2
-import googleapiclient.model
 
-from googleapiclient.errors import HttpError
 from googleapiclient.model import ProtocolBufferModel
 
-# Python 2.5 requires different modules
-try:
-    from urlparse import parse_qs
-except ImportError:
-    from cgi import parse_qs
 
 
 class MockProtocolBuffer(object):
