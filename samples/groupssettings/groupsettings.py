@@ -29,6 +29,7 @@ __author__ = 'Shraddha Gupta <shraddhag@google.com>'
 
 from optparse import OptionParser
 import os
+import six
 
 import pprint
 import sys
@@ -87,7 +88,7 @@ def access_settings(service, groupId, settings):
 
     # Settings might contain null value for some keys(properties).
     # Extract the properties with values and add to dictionary body.
-    for key in settings.iterkeys():
+    for key in six.iterkeys(settings):
         if settings[key] is not None:
             body[key] = settings[key]
 
