@@ -1082,8 +1082,8 @@ class BatchHttpRequest(object):
         """
         # Construct status line
         parsed = urllib.parse.urlparse(request.uri)
-        request_line = urllib.parse.urlunparse((None, None, parsed.path,
-                                           parsed.params, parsed.query, None))
+        request_line = urllib.parse.urlunparse(("", "", parsed.path,
+                                           parsed.params, parsed.query, ""))
         status_line = request.method + ' ' + request_line + ' HTTP/1.1\n'
         major, minor = request.headers.get('content-type', 'application/json').split('/')
         msg = MIMENonMultipart(major, minor)
