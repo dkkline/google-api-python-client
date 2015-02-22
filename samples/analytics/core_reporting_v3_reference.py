@@ -69,8 +69,8 @@ from oauth2client.client import AccessTokenRefreshError
 # Declare command-line flags.
 argparser = argparse.ArgumentParser(add_help=False)
 argparser.add_argument('table_id', type=str,
-                     help=('The table ID of the profile you wish to access. '
-                           'Format is ga:xxx where xxx is your profile ID.'))
+                       help=('The table ID of the profile you wish to access. '
+                             'Format is ga:xxx where xxx is your profile ID.'))
 
 
 def main(argv):

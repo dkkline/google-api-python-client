@@ -252,7 +252,7 @@ class JsonModel(BaseModel):
 
     def serialize(self, body_value):
         if (isinstance(body_value, dict) and 'data' not in body_value and
-            self._data_wrapper):
+                self._data_wrapper):
             body_value = {'data': body_value}
         return json.dumps(body_value)
 

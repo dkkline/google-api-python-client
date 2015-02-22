@@ -76,8 +76,8 @@ def init(argv, name, version, doc, filename, scope=None, parents=[], discovery_f
 
     # Set up a Flow object to be used if we need to authenticate.
     flow = client.flow_from_clientsecrets(client_secrets,
-        scope=scope,
-        message=tools.message_if_missing(client_secrets))
+                                          scope=scope,
+                                          message=tools.message_if_missing(client_secrets))
 
     # Prepare credentials, and authorize HTTP object with them.
     # If the credentials don't exist or are invalid run through the native client
@@ -96,7 +96,7 @@ def init(argv, name, version, doc, filename, scope=None, parents=[], discovery_f
         # Construct a service object using a local discovery document file.
         with open(discovery_filename) as discovery_file:
             service = discovery.build_from_document(
-                    discovery_file.read(),
-                    base='https://www.googleapis.com/',
-                    http=http)
+                discovery_file.read(),
+                base='https://www.googleapis.com/',
+                http=http)
     return (service, flags)

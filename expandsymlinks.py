@@ -50,7 +50,7 @@ def _ignore(path, names):
 
 def main():
     copytree(FLAGS.source, FLAGS.dest, symlinks=True,
-              ignore=_ignore)
+             ignore=_ignore)
 
 
 if __name__ == '__main__':

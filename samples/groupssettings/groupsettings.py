@@ -133,7 +133,7 @@ def main(argv):
     settings = {}
 
     if (options.whoCanInvite or options.whoCanJoin or options.whoCanPostMessage
-        or options.whoCanPostMessage or options.whoCanViewMembership) is None:
+            or options.whoCanPostMessage or options.whoCanViewMembership) is None:
         print 'No access parameters given in input to update access permissions'
         parser.print_help()
     else:
@@ -145,8 +145,8 @@ def main(argv):
 
     # Set up a Flow object to be used if we need to authenticate.
     FLOW = flow_from_clientsecrets(CLIENT_SECRETS,
-        scope='https://www.googleapis.com/auth/apps.groups.settings',
-        message=MISSING_CLIENT_SECRETS_MESSAGE)
+                                   scope='https://www.googleapis.com/auth/apps.groups.settings',
+                                   message=MISSING_CLIENT_SECRETS_MESSAGE)
 
     storage = Storage('groupsettings.dat')
     credentials = storage.get()

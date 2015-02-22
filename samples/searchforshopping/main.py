@@ -27,7 +27,7 @@ def main():
         country='US',
         source='public',
         q='android t-shirt'
-        ).execute()
+    ).execute()
     print_items(res['items'])
 
     # Search over a specific merchant's offers:
@@ -38,7 +38,7 @@ def main():
         source='public',
         q='android t-shirt',
         restrictBy='accountId:5968952',
-        ).execute()
+    ).execute()
     print_items(res['items'])
 
     # Remember the Google Id of the last product
@@ -52,7 +52,7 @@ def main():
         accountId='5968952',
         productIdType='gid',
         productId=googleId
-        ).execute()
+    ).execute()
     print_item(res)
 
 
@@ -60,8 +60,8 @@ def print_item(item):
     """Displays a single item: title, merchant, link."""
     product = item['product']
     print '- %s [%s] (%s)' % (product['title'],
-                            product['author']['name'],
-                            product['link'])
+                              product['author']['name'],
+                              product['link'])
 
 
 def print_items(items):

@@ -104,7 +104,7 @@ class Schemas(object):
 
         if name not in self.pretty:
             self.pretty[name] = _SchemaToStruct(self.schemas[name],
-                seen, dent=dent).to_str(self._prettyPrintByName)
+                                                seen, dent=dent).to_str(self._prettyPrintByName)
 
         seen.pop()
 

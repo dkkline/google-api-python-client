@@ -77,7 +77,7 @@ CHANNEL_PARAMS = {
     'resourceUri': 'resource_uri',
     'type': 'type',
     'token': 'token',
-    }
+}
 
 X_GOOG_CHANNEL_ID     = 'X-GOOG-CHANNEL-ID'
 X_GOOG_MESSAGE_NUMBER = 'X-GOOG-MESSAGE-NUMBER'
@@ -196,7 +196,7 @@ class Channel(object):
             'token': self.token,
             'type': self.type,
             'address': self.address
-            }
+        }
         if self.params:
             result['params'] = self.params
         if self.resource_id:

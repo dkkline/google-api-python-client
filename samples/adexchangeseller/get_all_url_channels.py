@@ -34,7 +34,7 @@ MAX_PAGE_SIZE = 50
 # Declare command-line flags.
 argparser = argparse.ArgumentParser(add_help=False)
 argparser.add_argument('ad_client_id',
-    help='The ad client ID for which to get URL channels')
+                       help='The ad client ID for which to get URL channels')
 
 
 def main(argv):
@@ -48,7 +48,7 @@ def main(argv):
     try:
         # Retrieve URL channel list in pages and display data as we receive it.
         request = service.urlchannels().list(adClientId=ad_client_id,
-            maxResults=MAX_PAGE_SIZE)
+                                             maxResults=MAX_PAGE_SIZE)
 
         while request is not None:
             result = request.execute()

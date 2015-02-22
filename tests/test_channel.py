@@ -38,7 +38,7 @@ class TestChannel(unittest.TestCase):
             'resourceId': 'updated_res_id',
             'resourceUri': 'updated_res_uri',
             'some_random_parameter': 2,
-            })
+        })
 
         body = ch.body()
         self.assertEqual('http://example.org/callback', body['address'])
@@ -82,7 +82,7 @@ class TestChannel(unittest.TestCase):
 class TestNotification(unittest.TestCase):
     def test_basic(self):
         n = channel.Notification(12, 'sync', 'http://example.org',
-                         'http://example.org/v1')
+                                 'http://example.org/v1')
 
         self.assertEqual(12, n.message_number)
         self.assertEqual('sync', n.state)
@@ -96,7 +96,7 @@ class TestNotification(unittest.TestCase):
             'X-Goog-rESOURCE-STATE': 'sync',
             'X-Goog-reSOURCE-URI': 'http://example.com/',
             'X-Goog-resOURCE-ID': 'http://example.com/resource_1',
-            }
+        }
 
         ch = channel.Channel('web_hook', 'myid', 'mytoken',
                              'http://example.org/callback',

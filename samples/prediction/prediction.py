@@ -55,11 +55,11 @@ SLEEP_TIME = 10
 # Declare command-line flags.
 argparser = argparse.ArgumentParser(add_help=False)
 argparser.add_argument('object_name',
-    help='Full Google Storage path of csv data (ex bucket/object)')
+                       help='Full Google Storage path of csv data (ex bucket/object)')
 argparser.add_argument('model_id',
-    help='Model Id of your choosing to name trained model')
+                       help='Model Id of your choosing to name trained model')
 argparser.add_argument('project_id',
-    help='Model Id of your choosing to name trained model')
+                       help='Model Id of your choosing to name trained model')
 
 
 def print_header(line):
@@ -129,7 +129,7 @@ def main(argv):
         for sample_text in ['mucho bueno', 'bonjour, mon cher ami']:
             body = {'input': {'csvInstance': [sample_text]}}
             result = papi.predict(
-              body=body, id=flags.model_id, project=flags.project_id).execute()
+                body=body, id=flags.model_id, project=flags.project_id).execute()
             print 'Prediction results for "%s"...' % sample_text
             pprint.pprint(result)
 

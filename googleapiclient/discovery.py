@@ -23,7 +23,7 @@ __all__ = [
     'build_from_document',
     'fix_method_name',
     'key2param',
-    ]
+]
 
 
 # Standard library imports
@@ -179,7 +179,7 @@ def build(serviceName,
     params = {
         'api': serviceName,
         'apiVersion': version
-        }
+    }
 
     if http is None:
         http = httplib2.Http()
@@ -199,7 +199,7 @@ def build(serviceName,
 
     if resp.status == 404:
         raise UnknownApiNameOrVersion("name: %s  version: %s" % (serviceName,
-                                                                version))
+                                                                 version))
     if resp.status >= 400:
         raise HttpError(resp, content, uri=requested_url)
 
@@ -210,8 +210,9 @@ def build(serviceName,
         raise InvalidJsonError()
 
     return build_from_document(content, base=discoveryServiceUrl, http=http,
-        developerKey=developerKey, model=model, requestBuilder=requestBuilder,
-        credentials=credentials)
+                               developerKey=developerKey, model=model,
+                               requestBuilder=requestBuilder,
+                               credentials=credentials)
 
 
 @positional(1)
@@ -268,7 +269,7 @@ def build_from_document(
         #    If there are no scopes found (meaning the given service requires no
         #    authentication), there is no authorization of the http.
         if (isinstance(credentials, GoogleCredentials) and
-            credentials.create_scoped_required()):
+                credentials.create_scoped_required()):
             scopes = service.get('auth', {}).get('oauth2', {}).get('scopes', {})
             if scopes:
                 credentials = credentials.create_scoped(scopes.keys())
@@ -631,7 +632,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
                 # name differently, since we want to handle both
                 # arg='value' and arg=['value1', 'value2']
                 if (name in parameters.repeated_params and
-                    not isinstance(kwargs[name], basestring)):
+                        not isinstance(kwargs[name], basestring)):
                     values = kwargs[name]
                 else:
                     values = [kwargs[name]]
@@ -668,7 +669,9 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
 
         headers = {}
         headers, params, query, body = model.request(headers,
-            actual_path_params, actual_query_params, body_value)
+                                                     actual_path_params,
+                                                     actual_query_params,
+                                                     body_value)
 
         expanded_url = uritemplate.expand(pathUrl, params)
         url = urlparse.urljoin(self._baseUrl, expanded_url + query)
@@ -786,8 +789,8 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
         if '$ref' in paramdesc:
             docs.append(
                 ('  %s: object, %s%s%s\n    The object takes the'
-                ' form of:\n\n%s\n\n') % (arg, paramdoc, required, repeated,
-                  schema.prettyPrintByName(paramdesc['$ref'])))
+                 ' form of:\n\n%s\n\n') % (arg, paramdoc, required, repeated,
+                                           schema.prettyPrintByName(paramdesc['$ref'])))
         else:
             paramtype = paramdesc.get('type', 'string')
             docs.append('  %s: %s, %s%s%s\n' % (arg, paramtype, paramdoc, required,

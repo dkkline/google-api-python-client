@@ -62,7 +62,7 @@ def main(argv):
 
     except client.AccessTokenRefreshError:
         print ('The credentials have been revoked or expired, please re-run'
-          'the application to re-authorize')
+               'the application to re-authorize')
 
 if __name__ == '__main__':
     main(sys.argv)

@@ -276,7 +276,7 @@ def document_collection(resource, path, root_discovery, discovery, css=CSS):
         css,
         '<h1>%s</h1>' % breadcrumbs(path[:-1], root_discovery),
         '<h2>Instance Methods</h2>'
-        ]
+    ]
 
     # Which methods are for collections.
     for name in dir(resource):
@@ -326,11 +326,11 @@ def document_collection_recursive(resource, path, root_discovery, discovery):
     for name in dir(resource):
         if (not name.startswith('_')
             and callable(getattr(resource, name))
-            and hasattr(getattr(resource, name), '__is_resource__')):
+                and hasattr(getattr(resource, name), '__is_resource__')):
             dname = name.rsplit('_')[0]
             collection = getattr(resource, name)()
             document_collection_recursive(collection, path + name + '.', root_discovery,
-                     discovery['resources'].get(dname, {}))
+                                          discovery['resources'].get(dname, {}))
 
 def document_api(name, version):
     """Document the given API.
@@ -345,7 +345,7 @@ def document_api(name, version):
             FLAGS.discovery_uri_template, {
                 'api': name,
                 'apiVersion': version})
-            )
+    )
     discovery = json.loads(content)
 
     version = safe_version(version)

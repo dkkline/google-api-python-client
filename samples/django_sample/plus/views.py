@@ -46,8 +46,8 @@ def index(request):
         logging.info(activitylist)
 
         return render_to_response('plus/welcome.html', {
-                    'activitylist': activitylist,
-                    })
+            'activitylist': activitylist,
+        })
 
 
 @login_required

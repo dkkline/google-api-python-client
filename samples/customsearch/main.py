@@ -32,12 +32,12 @@ def main():
     # the Google APIs Console <http://code.google.com/apis/console>
     # to get an API key for your own application.
     service = build("customsearch", "v1",
-              developerKey="AIzaSyDRRpR3GS1F1_jKNNM9HCNd2wJQyPG3oN0")
+                    developerKey="AIzaSyDRRpR3GS1F1_jKNNM9HCNd2wJQyPG3oN0")
 
     res = service.cse().list(
         q='lectures',
         cx='017576662512468239146:omuauf_lfve',
-      ).execute()
+    ).execute()
     pprint.pprint(res)
 
 if __name__ == '__main__':

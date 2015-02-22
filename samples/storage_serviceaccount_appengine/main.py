@@ -87,7 +87,7 @@ class MainHandler(webapp.RequestHandler):
 def main():
     application = webapp.WSGIApplication(
         [
-         ('.*', MainHandler),
+            ('.*', MainHandler),
         ],
         debug=True)
     run_wsgi_app(application)

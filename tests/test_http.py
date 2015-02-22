@@ -106,8 +106,8 @@ class TestUserAgent(unittest.TestCase):
 
     def test_set_user_agent(self):
         http = HttpMockSequence([
-          ({'status': '200'}, 'echo_request_headers'),
-          ])
+                                ({'status': '200'}, 'echo_request_headers'),
+                                ])
 
         http = set_user_agent(http, "my_app/5.5")
         resp, content = http.request("http://example.com")
@@ -115,8 +115,8 @@ class TestUserAgent(unittest.TestCase):
 
     def test_set_user_agent_nested(self):
         http = HttpMockSequence([
-          ({'status': '200'}, 'echo_request_headers'),
-          ])
+                                ({'status': '200'}, 'echo_request_headers'),
+                                ])
 
         http = set_user_agent(http, "my_app/5.5")
         http = set_user_agent(http, "my_library/0.1")
@@ -146,8 +146,8 @@ class TestMediaUpload(unittest.TestCase):
 
     def test_media_file_upload_raises_on_invalid_chunksize(self):
         self.assertRaises(InvalidChunkSizeError, MediaFileUpload,
-            datafile('small.png'), mimetype='image/png', chunksize=-2,
-            resumable=True)
+                          datafile('small.png'), mimetype='image/png', chunksize=-2,
+                          resumable=True)
 
     def test_media_inmemory_upload(self):
         media = MediaInMemoryUpload('abcdef', mimetype='text/plain', chunksize=10,
@@ -180,8 +180,8 @@ class TestMediaUpload(unittest.TestCase):
         new_req = HttpRequest.from_json(json, http, _postproc)
 
         self.assertEqual({'content-type':
-                           'multipart/related; boundary="---flubber"'},
-                           new_req.headers)
+                          'multipart/related; boundary="---flubber"'},
+                         new_req.headers)
         self.assertEqual('http://example.com', new_req.uri)
         self.assertEqual('{}', new_req.body)
         self.assertEqual(http, new_req.http)
@@ -266,7 +266,7 @@ class TestMediaIoBaseUpload(unittest.TestCase):
             f = open(datafile('small.png'), 'r')
             fd = io.BytesIO(f.read())
             self.assertRaises(InvalidChunkSizeError, MediaIoBaseUpload,
-                fd, 'image/png', chunksize=-2, resumable=True)
+                              fd, 'image/png', chunksize=-2, resumable=True)
         except ImportError:
             pass
 
@@ -296,15 +296,15 @@ class TestMediaIoBaseUpload(unittest.TestCase):
         # Simulate 5XXs for both the request that creates the resumable upload and
         # the upload itself.
         http = HttpMockSequence([
-          ({'status': '500'}, ''),
-          ({'status': '500'}, ''),
-          ({'status': '503'}, ''),
-          ({'status': '200', 'location': 'location'}, ''),
-          ({'status': '500'}, ''),
-          ({'status': '500'}, ''),
-          ({'status': '503'}, ''),
-          ({'status': '200'}, '{}'),
-        ])
+                                ({'status': '500'}, ''),
+                               ({'status': '500'}, ''),
+                               ({'status': '503'}, ''),
+                               ({'status': '200', 'location': 'location'}, ''),
+                               ({'status': '500'}, ''),
+                               ({'status': '500'}, ''),
+                               ({'status': '503'}, ''),
+                               ({'status': '200'}, '{}'),
+                                ])
 
         model = JsonModel()
         uri = u'https://www.googleapis.com/someapi/v1/upload/?foo=bar'
@@ -335,11 +335,11 @@ class TestMediaIoBaseDownload(unittest.TestCase):
 
     def test_media_io_base_download(self):
         self.request.http = HttpMockSequence([
-          ({'status': '200',
-            'content-range': '0-2/5'}, '123'),
-          ({'status': '200',
-            'content-range': '3-4/5'}, '45'),
-        ])
+                                             ({'status': '200',
+                                               'content-range': '0-2/5'}, '123'),
+                                            ({'status': '200',
+                                              'content-range': '3-4/5'}, '45'),
+                                             ])
         self.assertEqual(True, self.request.http.follow_redirects)
 
         download = MediaIoBaseDownload(
@@ -369,11 +369,11 @@ class TestMediaIoBaseDownload(unittest.TestCase):
 
     def test_media_io_base_download_handle_redirects(self):
         self.request.http = HttpMockSequence([
-          ({'status': '200',
-            'content-location': 'https://secure.example.net/lion'}, ''),
-          ({'status': '200',
-            'content-range': '0-2/5'}, 'abc'),
-        ])
+                                             ({'status': '200',
+                                               'content-location': 'https://secure.example.net/lion'}, ''),
+                                            ({'status': '200',
+                                              'content-range': '0-2/5'}, 'abc'),
+                                             ])
 
         download = MediaIoBaseDownload(
             fd=self.fd, request=self.request, chunksize=3)
@@ -384,8 +384,8 @@ class TestMediaIoBaseDownload(unittest.TestCase):
 
     def test_media_io_base_download_handle_4xx(self):
         self.request.http = HttpMockSequence([
-          ({'status': '400'}, ''),
-        ])
+                                             ({'status': '400'}, ''),
+                                             ])
 
         download = MediaIoBaseDownload(
             fd=self.fd, request=self.request, chunksize=3)
@@ -398,9 +398,9 @@ class TestMediaIoBaseDownload(unittest.TestCase):
 
         # Even after raising an exception we can pick up where we left off.
         self.request.http = HttpMockSequence([
-          ({'status': '200',
-            'content-range': '0-2/5'}, '123'),
-        ])
+                                             ({'status': '200',
+                                               'content-range': '0-2/5'}, '123'),
+                                             ])
 
         status, done = download.next_chunk()
 
@@ -408,17 +408,17 @@ class TestMediaIoBaseDownload(unittest.TestCase):
 
     def test_media_io_base_download_retries_5xx(self):
         self.request.http = HttpMockSequence([
-          ({'status': '500'}, ''),
-          ({'status': '500'}, ''),
-          ({'status': '500'}, ''),
-          ({'status': '200',
-            'content-range': '0-2/5'}, '123'),
-          ({'status': '503'}, ''),
-          ({'status': '503'}, ''),
-          ({'status': '503'}, ''),
-          ({'status': '200',
-            'content-range': '3-4/5'}, '45'),
-        ])
+                                             ({'status': '500'}, ''),
+                                            ({'status': '500'}, ''),
+                                            ({'status': '500'}, ''),
+                                            ({'status': '200',
+                                              'content-range': '0-2/5'}, '123'),
+                                            ({'status': '503'}, ''),
+                                            ({'status': '503'}, ''),
+                                            ({'status': '503'}, ''),
+                                            ({'status': '200',
+                                              'content-range': '3-4/5'}, '45'),
+                                             ])
 
         download = MediaIoBaseDownload(
             fd=self.fd, request=self.request, chunksize=3)
@@ -631,7 +631,7 @@ class TestHttpRequest(unittest.TestCase):
         http = HttpMockSequence([
             ({'status': '500'}, ''),
             ({'status': '200'}, '{}')
-            ])
+        ])
         model = JsonModel()
         uri = u'https://www.googleapis.com/someapi/v1/collection/?foo=bar'
         method = u'POST'
@@ -773,10 +773,10 @@ class TestBatch(unittest.TestCase):
         batch.add(self.request1, callback=callbacks.f)
         batch.add(self.request2, callback=callbacks.f)
         http = HttpMockSequence([
-          ({'status': '200',
-            'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
-           BATCH_RESPONSE),
-          ])
+                                ({'status': '200',
+                                  'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
+                                 BATCH_RESPONSE),
+                                ])
         batch.execute(http=http)
         self.assertEqual({'foo': 42}, callbacks.responses['1'])
         self.assertEqual(None, callbacks.exceptions['1'])
@@ -789,10 +789,10 @@ class TestBatch(unittest.TestCase):
         batch.add(self.request1)
         batch.add(self.request2)
         http = HttpMockSequence([
-          ({'status': '200',
-            'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
-            'echo_request_body'),
-          ])
+                                ({'status': '200',
+                                  'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
+                                 'echo_request_body'),
+                                ])
         try:
             batch.execute(http=http)
             self.fail('Should raise exception')
@@ -813,13 +813,13 @@ class TestBatch(unittest.TestCase):
         cred_2 = MockCredentials('Bar')
 
         http = HttpMockSequence([
-          ({'status': '200',
-            'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
-           BATCH_RESPONSE_WITH_401),
-          ({'status': '200',
-            'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
-           BATCH_SINGLE_RESPONSE),
-          ])
+                                ({'status': '200',
+                                  'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
+                                 BATCH_RESPONSE_WITH_401),
+                               ({'status': '200',
+                                 'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
+                                BATCH_SINGLE_RESPONSE),
+                                ])
 
         creds_http_1 = HttpMockSequence([])
         cred_1.authorize(creds_http_1)
@@ -855,13 +855,13 @@ class TestBatch(unittest.TestCase):
         cred_2 = MockCredentials('Bar')
 
         http = HttpMockSequence([
-          ({'status': '200',
-            'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
-           BATCH_RESPONSE_WITH_401),
-          ({'status': '200',
-            'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
-           BATCH_RESPONSE_WITH_401),
-          ])
+                                ({'status': '200',
+                                  'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
+                                 BATCH_RESPONSE_WITH_401),
+                               ({'status': '200',
+                                 'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
+                                BATCH_RESPONSE_WITH_401),
+                                ])
 
         creds_http_1 = HttpMockSequence([])
         cred_1.authorize(creds_http_1)
@@ -890,10 +890,10 @@ class TestBatch(unittest.TestCase):
         batch.add(self.request1)
         batch.add(self.request2)
         http = HttpMockSequence([
-          ({'status': '200',
-            'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
-           BATCH_RESPONSE),
-          ])
+                                ({'status': '200',
+                                  'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
+                                 BATCH_RESPONSE),
+                                ])
         batch.execute(http=http)
         self.assertEqual({'foo': 42}, callbacks.responses['1'])
         self.assertEqual({'baz': 'qux'}, callbacks.responses['2'])
@@ -905,15 +905,15 @@ class TestBatch(unittest.TestCase):
         batch.add(self.request1)
         batch.add(self.request2)
         http = HttpMockSequence([
-          ({'status': '200',
-            'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
-           BATCH_ERROR_RESPONSE),
-          ])
+                                ({'status': '200',
+                                  'content-type': 'multipart/mixed; boundary="batch_foobarbaz"'},
+                                 BATCH_ERROR_RESPONSE),
+                                ])
         batch.execute(http=http)
         self.assertEqual({'foo': 42}, callbacks.responses['1'])
         expected = ('<HttpError 403 when requesting '
-            'https://www.googleapis.com/someapi/v1/collection/?foo=bar returned '
-            '"Access Not Configured">')
+                    'https://www.googleapis.com/someapi/v1/collection/?foo=bar returned '
+                    '"Access Not Configured">')
         self.assertEqual(expected, str(callbacks.exceptions['2']))
 
 
@@ -925,16 +925,16 @@ class TestRequestUriTooLong(unittest.TestCase):
             return content
 
         http = HttpMockSequence([
-          ({'status': '200'},
-            'echo_request_body'),
-          ({'status': '200'},
-            'echo_request_headers'),
-          ])
+                                ({'status': '200'},
+                                 'echo_request_body'),
+                               ({'status': '200'},
+                                'echo_request_headers'),
+                                ])
 
         # Send a long query parameter.
         query = {
             'q': 'a' * MAX_URI_LENGTH + '?&'
-            }
+        }
         req = HttpRequest(
             http,
             _postproc,

@@ -54,4 +54,4 @@ def truncate(s, l):
 application = webapp2.WSGIApplication([
     ('/', MainHandler),
     (decorator.callback_path, decorator.callback_handler()),
-    ], debug=True)
+], debug=True)

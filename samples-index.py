@@ -59,7 +59,7 @@ KEYWORDS = {
     'threading': 'Threading',
     'pagination': 'Pagination',
     'media': 'Media Upload and Download'
-    }
+}
 
 
 def get_lines(name, lines):
@@ -124,7 +124,7 @@ def context_from_sample(api, keywords, dirname, desc, uri):
             'dir': dirname,
             'uri': uri,
             'desc': wiki_escape(desc),
-            }
+        }
         return context
 
 
@@ -151,7 +151,7 @@ def keyword_context_from_sample(keywords, dirname, desc, uri):
         'dir': dirname,
         'uri': uri,
         'desc': wiki_escape(desc),
-        }
+    }
     return context
 
 

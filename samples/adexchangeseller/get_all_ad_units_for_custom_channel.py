@@ -32,9 +32,9 @@ from oauth2client import client
 # Declare command-line flags.
 argparser = argparse.ArgumentParser(add_help=False)
 argparser.add_argument('ad_client_id',
-    help='The ID of the ad client with the specified custom channel')
+                       help='The ID of the ad client with the specified custom channel')
 argparser.add_argument('custom_channel_id',
-    help='The ID of the custom channel for which to get ad units')
+                       help='The ID of the custom channel for which to get ad units')
 
 MAX_PAGE_SIZE = 50
 

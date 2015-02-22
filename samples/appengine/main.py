@@ -81,7 +81,7 @@ class MainHandler(webapp2.RequestHandler):
         variables = {
             'url': decorator.authorize_url(),
             'has_credentials': decorator.has_credentials()
-            }
+        }
         template = JINJA_ENVIRONMENT.get_template('grant.html')
         self.response.write(template.render(variables))
 
@@ -103,8 +103,8 @@ class AboutHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication(
     [
-     ('/', MainHandler),
-     ('/about', AboutHandler),
-     (decorator.callback_path, decorator.callback_handler()),
+        ('/', MainHandler),
+        ('/about', AboutHandler),
+        (decorator.callback_path, decorator.callback_handler()),
     ],
     debug=True)

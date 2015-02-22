@@ -105,16 +105,16 @@ class ResourceHandler(webapp.RequestHandler):
     def get(self, service_name, version, collection):
 
         return self.redirect('https://google-api-client-libraries.appspot.com/documentation/%s/%s/python/latest/%s_%s.%s.html'
-            % (service_name, version, service_name, version, collection))
+                             % (service_name, version, service_name, version, collection))
 
 
 def main():
     application = webapp.WSGIApplication(
         [
-        (r'/', MainHandler),
-        (r'/_gadget/', GadgetHandler),
-        (r'/_embed/', EmbedHandler),
-        (r'/([^_]+)_([^\.]+)(?:\.(.*))?\.html$', ResourceHandler),
+            (r'/', MainHandler),
+            (r'/_gadget/', GadgetHandler),
+            (r'/_embed/', EmbedHandler),
+            (r'/([^_]+)_([^\.]+)(?:\.(.*))?\.html$', ResourceHandler),
         ],
         debug=True)
     util.run_wsgi_app(application)

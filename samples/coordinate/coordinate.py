@@ -73,27 +73,27 @@ def main(argv):
 
         # Insert a job and store the results
         insert_result = service.jobs().insert(body='',
-          title='Google Campus',
-          teamId=flags.teamId,
-          address='1600 Amphitheatre Parkway Mountain View, CA 94043',
-          lat='37.422120',
-          lng='122.084429',
-          assignee=None,
-          note=note).execute()
+                                              title='Google Campus',
+                                              teamId=flags.teamId,
+                                              address='1600 Amphitheatre Parkway Mountain View, CA 94043',
+                                              lat='37.422120',
+                                              lng='122.084429',
+                                              assignee=None,
+                                              note=note).execute()
 
         pprint.pprint(insert_result)
 
         # Close the job
         update_result = service.jobs().update(body='',
-          teamId=flags.teamId,
-          jobId=insert_result['id'],
-          progress='COMPLETED').execute()
+                                              teamId=flags.teamId,
+                                              jobId=insert_result['id'],
+                                              progress='COMPLETED').execute()
 
         pprint.pprint(update_result)
 
     except AccessTokenRefreshError, e:
         print ('The credentials have been revoked or expired, please re-run'
-          'the application to re-authorize')
+               'the application to re-authorize')
 
 
 if __name__ == '__main__':

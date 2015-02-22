@@ -278,7 +278,7 @@ class MediaIoBaseUpload(MediaUpload):
 
     @util.positional(3)
     def __init__(self, fd, mimetype, chunksize=DEFAULT_CHUNK_SIZE,
-        resumable=False):
+                 resumable=False):
         """Constructor.
 
         Args:
@@ -535,7 +535,7 @@ class MediaIoBaseDownload(object):
         headers = {
             'range': 'bytes=%d-%d' % (
                 self._progress, self._progress + self._chunksize)
-            }
+        }
         http = self._request.http
 
         for retry_num in xrange(num_retries + 1):
@@ -700,10 +700,9 @@ class HttpRequest(object):
             self.headers['x-http-method-override'] = 'GET'
             self.headers['content-type'] = 'application/x-www-form-urlencoded'
             parsed = urlparse.urlparse(self.uri)
-            self.uri = urlparse.urlunparse(
-                (parsed.scheme, parsed.netloc, parsed.path, parsed.params, None,
-                 None)
-                )
+            self.uri = urlparse.urlunparse((parsed.scheme, parsed.netloc,
+                                           parsed.path, parsed.params, None,
+                                           None))
             self.body = parsed.query
             self.headers['content-length'] = str(len(self.body))
 
@@ -815,7 +814,7 @@ class HttpRequest(object):
             headers = {
                 'Content-Range': 'bytes */%s' % size,
                 'content-length': '0'
-                }
+            }
             resp, content = http.request(self.resumable_uri, 'PUT',
                                          headers=headers)
             status, body = self._process_response(resp, content)
@@ -854,7 +853,7 @@ class HttpRequest(object):
             # Must set the content-length header here because httplib can't
             # calculate the size when working with _StreamSlice.
             'Content-Length': str(chunk_end - self.resumable_progress + 1)
-            }
+        }
 
         for retry_num in xrange(num_retries + 1):
             if retry_num > 0:
@@ -1019,7 +1018,7 @@ class BatchHttpRequest(object):
         # via execute()
         creds = None
         if request.http is not None and hasattr(request.http.request,
-            'credentials'):
+                                                'credentials'):
             creds = request.http.request.credentials
         elif http is not None and hasattr(http.request, 'credentials'):
             creds = http.request.credentials
@@ -1031,7 +1030,7 @@ class BatchHttpRequest(object):
         # Only apply the credentials if we are using the http object passed in,
         # otherwise apply() will get called during _serialize_request().
         if request.http is None or not hasattr(request.http.request,
-            'credentials'):
+                                               'credentials'):
             creds.apply(request.headers)
 
     def _id_to_header(self, id_):
@@ -1084,16 +1083,15 @@ class BatchHttpRequest(object):
         """
         # Construct status line
         parsed = urlparse.urlparse(request.uri)
-        request_line = urlparse.urlunparse(
-            (None, None, parsed.path, parsed.params, parsed.query, None)
-            )
+        request_line = urlparse.urlunparse((None, None, parsed.path,
+                                           parsed.params, parsed.query, None))
         status_line = request.method + ' ' + request_line + ' HTTP/1.1\n'
         major, minor = request.headers.get('content-type', 'application/json').split('/')
         msg = MIMENonMultipart(major, minor)
         headers = request.headers.copy()
 
         if request.http is not None and hasattr(request.http.request,
-            'credentials'):
+                                                'credentials'):
             request.http.request.credentials.apply(headers)
 
         # MIMENonMultipart adds its own Content-Type header.
@@ -1568,7 +1566,7 @@ def set_user_agent(http, user_agent):
         else:
             headers['user-agent'] = user_agent
         resp, content = request_orig(uri, method, body, headers,
-                            redirections, connection_type)
+                                     redirections, connection_type)
         return resp, content
 
     http.request = new_request
@@ -1609,7 +1607,7 @@ def tunnel_patch(http):
             headers['x-http-method-override'] = "PATCH"
             method = 'POST'
         resp, content = request_orig(uri, method, body, headers,
-                            redirections, connection_type)
+                                     redirections, connection_type)
         return resp, content
 
     http.request = new_request
