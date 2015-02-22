@@ -134,7 +134,7 @@ class TestMediaUpload(unittest.TestCase):
         self.assertEqual(190, upload.size())
         self.assertEqual(True, upload.resumable())
         self.assertEqual(500, upload.chunksize())
-        self.assertEqual('PNG', upload.getbytes(1, 3))
+        self.assertEqual(b'PNG', upload.getbytes(1, 3))
 
         json = upload.to_json()
         new_upload = MediaUpload.new_from_json(json)
@@ -143,7 +143,7 @@ class TestMediaUpload(unittest.TestCase):
         self.assertEqual(190, new_upload.size())
         self.assertEqual(True, new_upload.resumable())
         self.assertEqual(500, new_upload.chunksize())
-        self.assertEqual('PNG', new_upload.getbytes(1, 3))
+        self.assertEqual(b'PNG', new_upload.getbytes(1, 3))
 
     def test_media_file_upload_raises_on_invalid_chunksize(self):
         self.assertRaises(InvalidChunkSizeError, MediaFileUpload,
@@ -205,7 +205,7 @@ class TestMediaIoBaseUpload(unittest.TestCase):
             self.assertEqual(190, upload.size())
             self.assertEqual(True, upload.resumable())
             self.assertEqual(500, upload.chunksize())
-            self.assertEqual('PNG', upload.getbytes(1, 3))
+            self.assertEqual(b'PNG', upload.getbytes(1, 3))
         except ImportError:
             pass
 
@@ -217,7 +217,7 @@ class TestMediaIoBaseUpload(unittest.TestCase):
         self.assertEqual(190, upload.size())
         self.assertEqual(True, upload.resumable())
         self.assertEqual(500, upload.chunksize())
-        self.assertEqual('PNG', upload.getbytes(1, 3))
+        self.assertEqual(b'PNG', upload.getbytes(1, 3))
         f.close()
 
     def test_media_io_base_upload_serializable(self):
@@ -241,7 +241,7 @@ class TestMediaIoBaseUpload(unittest.TestCase):
         self.assertEqual(190, upload.size())
         self.assertEqual(True, upload.resumable())
         self.assertEqual(500, upload.chunksize())
-        self.assertEqual('PNG', upload.getbytes(1, 3))
+        self.assertEqual(b'PNG', upload.getbytes(1, 3))
         f.close()
 
     def test_media_io_base_upload_from_bytes(self):
@@ -256,7 +256,7 @@ class TestMediaIoBaseUpload(unittest.TestCase):
             self.assertEqual(190, upload.size())
             self.assertEqual(True, upload.resumable())
             self.assertEqual(500, upload.chunksize())
-            self.assertEqual('PNG', upload.getbytes(1, 3))
+            self.assertEqual(b'PNG', upload.getbytes(1, 3))
         except ImportError:
             pass
 

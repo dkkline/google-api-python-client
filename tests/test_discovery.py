@@ -573,7 +573,7 @@ class Discovery(unittest.TestCase):
         zoo = build('zoo', 'v1', http=self.http)
         request = zoo.animals().crossbreed(media_body=datafile('small.png'))
         self.assertEquals('image/png', request.headers['content-type'])
-        self.assertEquals('PNG', request.body[1:4])
+        self.assertEquals(b'PNG', request.body[1:4])
 
     def test_simple_media_raise_correct_exceptions(self):
         self.http = HttpMock(datafile('zoo.json'), {'status': '200'})
@@ -597,7 +597,7 @@ class Discovery(unittest.TestCase):
 
         request = zoo.animals().insert(media_body=datafile('small.png'))
         self.assertEquals('image/png', request.headers['content-type'])
-        self.assertEquals('PNG', request.body[1:4])
+        self.assertEquals(b'PNG', request.body[1:4])
         assertUrisEqual(self,
                         'https://www.googleapis.com/upload/zoo/v1/animals?uploadType=media&alt=json',
                         request.uri)
@@ -879,7 +879,8 @@ class Discovery(unittest.TestCase):
             try:
                 body = request.execute(http=http)
             except HttpError as e:
-                self.assertEqual('01234', e.content)
+                print(e.content, type(e.content))
+                self.assertEqual(b'01234', e.content)
 
         except ImportError:
             pass
