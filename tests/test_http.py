@@ -28,7 +28,7 @@ import os
 import unittest
 import random
 import time
-from io import BytesIO
+from io import BytesIO, FileIO
 from six import StringIO
 from six.moves import urllib
 from six.moves import xrange
@@ -196,19 +196,14 @@ class TestMediaUpload(unittest.TestCase):
 class TestMediaIoBaseUpload(unittest.TestCase):
 
     def test_media_io_base_upload_from_file_io(self):
-        try:
-            import io
-
-            fd = io.FileIO(datafile('small.png'), 'rb')
-            upload = MediaIoBaseUpload(
-                fd=fd, mimetype='image/png', chunksize=500, resumable=True)
-            self.assertEqual('image/png', upload.mimetype())
-            self.assertEqual(190, upload.size())
-            self.assertEqual(True, upload.resumable())
-            self.assertEqual(500, upload.chunksize())
-            self.assertEqual(b'PNG', upload.getbytes(1, 3))
-        except ImportError:
-            pass
+        fd = FileIO(datafile('small.png'), 'rb')
+        upload = MediaIoBaseUpload(
+            fd=fd, mimetype='image/png', chunksize=500, resumable=True)
+        self.assertEqual('image/png', upload.mimetype())
+        self.assertEqual(190, upload.size())
+        self.assertEqual(True, upload.resumable())
+        self.assertEqual(500, upload.chunksize())
+        self.assertEqual(b'PNG', upload.getbytes(1, 3))
 
     def test_media_io_base_upload_from_file_object(self):
         f = open(datafile('small.png'), 'rb')
@@ -246,52 +241,32 @@ class TestMediaIoBaseUpload(unittest.TestCase):
         f.close()
 
     def test_media_io_base_upload_from_bytes(self):
-        try:
-            import io
-
-            f = open(datafile('small.png'), 'rb')
-            fd = io.BytesIO(f.read())
-            upload = MediaIoBaseUpload(
-                fd=fd, mimetype='image/png', chunksize=500, resumable=True)
-            self.assertEqual('image/png', upload.mimetype())
-            self.assertEqual(190, upload.size())
-            self.assertEqual(True, upload.resumable())
-            self.assertEqual(500, upload.chunksize())
-            self.assertEqual(b'PNG', upload.getbytes(1, 3))
-        except ImportError:
-            pass
+        f = open(datafile('small.png'), 'rb')
+        fd = BytesIO(f.read())
+        upload = MediaIoBaseUpload(
+            fd=fd, mimetype='image/png', chunksize=500, resumable=True)
+        self.assertEqual('image/png', upload.mimetype())
+        self.assertEqual(190, upload.size())
+        self.assertEqual(True, upload.resumable())
+        self.assertEqual(500, upload.chunksize())
+        self.assertEqual(b'PNG', upload.getbytes(1, 3))
 
     def test_media_io_base_upload_raises_on_invalid_chunksize(self):
-        try:
-            import io
-
-            f = open(datafile('small.png'), 'rb')
-            fd = io.BytesIO(f.read())
-            self.assertRaises(InvalidChunkSizeError, MediaIoBaseUpload,
-                              fd, 'image/png', chunksize=-2, resumable=True)
-        except ImportError:
-            pass
+        f = open(datafile('small.png'), 'rb')
+        fd = BytesIO(f.read())
+        self.assertRaises(InvalidChunkSizeError, MediaIoBaseUpload,
+                          fd, 'image/png', chunksize=-2, resumable=True)
 
     def test_media_io_base_upload_streamable(self):
-        try:
-            import io
-
-            fd = io.BytesIO(b'stuff')
-            upload = MediaIoBaseUpload(
-                fd=fd, mimetype='image/png', chunksize=500, resumable=True)
-            self.assertEqual(True, upload.has_stream())
-            self.assertEqual(fd, upload.stream())
-        except ImportError:
-            pass
+        fd = BytesIO(b'stuff')
+        upload = MediaIoBaseUpload(
+            fd=fd, mimetype='image/png', chunksize=500, resumable=True)
+        self.assertEqual(True, upload.has_stream())
+        self.assertEqual(fd, upload.stream())
 
     def test_media_io_base_next_chunk_retries(self):
-        try:
-            import io
-        except ImportError:
-            return
-
         f = open(datafile('small.png'), 'rb')
-        fd = io.BytesIO(f.read())
+        fd = BytesIO(f.read())
         upload = MediaIoBaseUpload(
             fd=fd, mimetype='image/png', chunksize=500, resumable=True)
 
