@@ -39,9 +39,8 @@ from oauth2client.client import SignedJwtAssertionCredentials
 def main(argv):
     # Load the key in PKCS 12 format that you downloaded from the Google API
     # Console when you created your Service account.
-    f = file('key.p12', 'rb')
-    key = f.read()
-    f.close()
+    with open("key.p12", "rb") as f:
+        key = f.read()
 
     # Create an httplib2.Http object to handle our HTTP requests and authorize it
     # with the Credentials. Note that the first parameter, service_account_name,
