@@ -147,7 +147,7 @@ class Model(unittest.TestCase):
         try:
             content = model.response(resp, content)
             self.fail('Should have thrown an exception')
-        except HttpError, e:
+        except HttpError as e:
             self.assertTrue('not authorized' in str(e))
 
         resp['content-type'] = 'application/json'
@@ -155,7 +155,7 @@ class Model(unittest.TestCase):
         try:
             content = model.response(resp, content)
             self.fail('Should have thrown an exception')
-        except HttpError, e:
+        except HttpError as e:
             self.assertTrue('not authorized' in str(e))
 
     def test_good_response(self):
