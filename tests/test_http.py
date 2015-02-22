@@ -248,7 +248,7 @@ class TestMediaIoBaseUpload(unittest.TestCase):
         try:
             import io
 
-            f = open(datafile('small.png'), 'r')
+            f = open(datafile('small.png'), 'rb')
             fd = io.BytesIO(f.read())
             upload = MediaIoBaseUpload(
                 fd=fd, mimetype='image/png', chunksize=500, resumable=True)
@@ -264,7 +264,7 @@ class TestMediaIoBaseUpload(unittest.TestCase):
         try:
             import io
 
-            f = open(datafile('small.png'), 'r')
+            f = open(datafile('small.png'), 'rb')
             fd = io.BytesIO(f.read())
             self.assertRaises(InvalidChunkSizeError, MediaIoBaseUpload,
                               fd, 'image/png', chunksize=-2, resumable=True)
@@ -289,7 +289,7 @@ class TestMediaIoBaseUpload(unittest.TestCase):
         except ImportError:
             return
 
-        f = open(datafile('small.png'), 'r')
+        f = open(datafile('small.png'), 'rb')
         fd = io.BytesIO(f.read())
         upload = MediaIoBaseUpload(
             fd=fd, mimetype='image/png', chunksize=500, resumable=True)
