@@ -832,7 +832,7 @@ class Discovery(unittest.TestCase):
             import io
 
             # Set up a seekable stream and try to upload in single chunk.
-            fd = io.BytesIO('01234"56789"')
+            fd = io.BytesIO(b'01234"56789"')
             media_upload = MediaIoBaseUpload(
                 fd=fd, mimetype='text/plain', chunksize=-1, resumable=True)
 
@@ -863,7 +863,7 @@ class Discovery(unittest.TestCase):
             import io
 
             # Set up a seekable stream and try to upload in chunks.
-            fd = io.BytesIO('0123456789')
+            fd = io.BytesIO(b'0123456789')
             media_upload = MediaIoBaseUpload(
                 fd=fd, mimetype='text/plain', chunksize=5, resumable=True)
 

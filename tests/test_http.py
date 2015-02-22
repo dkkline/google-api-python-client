@@ -275,7 +275,7 @@ class TestMediaIoBaseUpload(unittest.TestCase):
         try:
             import io
 
-            fd = io.BytesIO('stuff')
+            fd = io.BytesIO(b'stuff')
             upload = MediaIoBaseUpload(
                 fd=fd, mimetype='image/png', chunksize=500, resumable=True)
             self.assertEqual(True, upload.has_stream())
