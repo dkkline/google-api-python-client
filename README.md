@@ -1,22 +1,18 @@
 # About
-This is the Python client library for Google's discovery based APIs. To get started, please see the [full documentation for this library](http://google.github.io/google-api-python-client). Additionally, [dynamically generated documentation](http://api-python-client-doc.appspot.com/) is available for all of the APIs supported by this library.
+This is a fork of Google's `google-api-python-client` that aims to improve the code base by:
+* Adhering to the PEP8
+* Supporting the following python versions: 2.6, 2.7, 3.3, 3.4
 
+Its a Python client library for Google's discovery based APIs.
+
+# Get started
+See the [full documentation for this library](http://dkkline.github.io/google-api-python-client).
+Additionally, [dynamically generated documentation](http://api-python-client-doc.appspot.com/) is available for all of the APIs supported by this library.
 
 # Installation
-To install, simply use `pip` or `easy_install`:
-
-```bash
-$ pip install --upgrade google-api-python-client
-```
-or
-```bash
-$ easy_install --upgrade google-api-python-client
-```
+TODO
 
 See the [Developers Guide](https://developers.google.com/api-client-library/python/start/get_started) for more detailed instructions and additional documentation.
-
-# Python Version
-Python 2.6 or 2.7 is required. Python 3.x is not yet supported.
 
 # Third Party Libraries and Dependencies
 The following libraries will be installed when you install the client library:
