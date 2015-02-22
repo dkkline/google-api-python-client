@@ -28,6 +28,7 @@ import os
 import unittest
 import random
 import time
+from io import BytesIO
 from six import StringIO
 from six.moves import urllib
 from six.moves import xrange
@@ -198,7 +199,7 @@ class TestMediaIoBaseUpload(unittest.TestCase):
         try:
             import io
 
-            fd = io.FileIO(datafile('small.png'), 'r')
+            fd = io.FileIO(datafile('small.png'), 'rb')
             upload = MediaIoBaseUpload(
                 fd=fd, mimetype='image/png', chunksize=500, resumable=True)
             self.assertEqual('image/png', upload.mimetype())
@@ -210,7 +211,7 @@ class TestMediaIoBaseUpload(unittest.TestCase):
             pass
 
     def test_media_io_base_upload_from_file_object(self):
-        f = open(datafile('small.png'), 'r')
+        f = open(datafile('small.png'), 'rb')
         upload = MediaIoBaseUpload(
             fd=f, mimetype='image/png', chunksize=500, resumable=True)
         self.assertEqual('image/png', upload.mimetype())
@@ -231,8 +232,8 @@ class TestMediaIoBaseUpload(unittest.TestCase):
             pass
 
     def test_media_io_base_upload_from_string_io(self):
-        f = open(datafile('small.png'), 'r')
-        fd = StringIO(f.read())
+        f = open(datafile('small.png'), 'rb')
+        fd = BytesIO(f.read())
         f.close()
 
         upload = MediaIoBaseUpload(
@@ -701,9 +702,8 @@ class TestBatch(unittest.TestCase):
 
     def test_serialize_request_media_body(self):
         batch = BatchHttpRequest()
-        f = open(datafile('small.png'))
-        body = f.read()
-        f.close()
+        with open(datafile('small.png'), "rb") as f:
+            body = f.read()
 
         request = HttpRequest(
             None,
