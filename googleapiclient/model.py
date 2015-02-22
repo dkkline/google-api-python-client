@@ -259,7 +259,9 @@ class JsonModel(BaseModel):
         return json.dumps(body_value)
 
     def deserialize(self, content):
-        content = content.decode('utf-8')
+        if six.PY2:  # We need to decode the string if we're on Python 2
+            content = content.decode('utf-8')
+
         body = json.loads(content)
         if self._data_wrapper and isinstance(body, dict) and 'data' in body:
             body = body['data']
