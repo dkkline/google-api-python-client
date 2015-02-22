@@ -64,6 +64,7 @@ from googleapiclient.http import MediaIoBaseUpload
 from googleapiclient.http import MediaUpload
 from googleapiclient.http import MediaUploadProgress
 from googleapiclient.http import tunnel_patch
+from googleapiclient.compat import long
 from oauth2client import GOOGLE_TOKEN_URI
 from oauth2client import util
 from oauth2client.client import OAuth2Credentials
@@ -251,7 +252,7 @@ class Utilities(unittest.TestCase):
         http_method = 'GET'
         method_id = 'bigquery.query'
         accept = []
-        max_size = 0L
+        max_size = long(0)
         media_path_url = None
         self.assertEqual(result, (path_url, http_method, method_id, accept,
                                   max_size, media_path_url))
@@ -263,7 +264,7 @@ class Utilities(unittest.TestCase):
         http_method = 'POST'
         method_id = 'zoo.animals.insert'
         accept = ['image/png']
-        max_size = 1024L
+        max_size = long(1024)
         media_path_url = 'https://www.googleapis.com/upload/zoo/v1/animals'
         self.assertEqual(result, (path_url, http_method, method_id, accept,
                                   max_size, media_path_url))
