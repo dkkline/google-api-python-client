@@ -76,29 +76,29 @@ decorator = appengine.oauth2decorator_from_clientsecrets(
 
 class MainHandler(webapp2.RequestHandler):
 
-  @decorator.oauth_aware
-  def get(self):
-    variables = {
-        'url': decorator.authorize_url(),
-        'has_credentials': decorator.has_credentials()
-        }
-    template = JINJA_ENVIRONMENT.get_template('grant.html')
-    self.response.write(template.render(variables))
+    @decorator.oauth_aware
+    def get(self):
+        variables = {
+            'url': decorator.authorize_url(),
+            'has_credentials': decorator.has_credentials()
+            }
+        template = JINJA_ENVIRONMENT.get_template('grant.html')
+        self.response.write(template.render(variables))
 
 
 class AboutHandler(webapp2.RequestHandler):
 
-  @decorator.oauth_required
-  def get(self):
-    try:
-      http = decorator.http()
-      user = service.people().get(userId='me').execute(http=http)
-      text = 'Hello, %s!' % user['displayName']
+    @decorator.oauth_required
+    def get(self):
+        try:
+            http = decorator.http()
+            user = service.people().get(userId='me').execute(http=http)
+            text = 'Hello, %s!' % user['displayName']
 
-      template = JINJA_ENVIRONMENT.get_template('welcome.html')
-      self.response.write(template.render({'text': text }))
-    except client.AccessTokenRefreshError:
-      self.redirect('/')
+            template = JINJA_ENVIRONMENT.get_template('welcome.html')
+            self.response.write(template.render({'text': text }))
+        except client.AccessTokenRefreshError:
+            self.redirect('/')
 
 
 app = webapp2.WSGIApplication(

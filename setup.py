@@ -22,33 +22,33 @@ from __future__ import print_function
 import sys
 
 if sys.version_info < (2, 6):
-  print('google-api-python-client requires python version >= 2.6.',
-        file=sys.stderr)
-  sys.exit(1)
+    print('google-api-python-client requires python version >= 2.6.',
+          file=sys.stderr)
+    sys.exit(1)
 
 from setuptools import setup
 import pkg_resources
 
 def _DetectBadness():
-  import os
-  if 'SKIP_GOOGLEAPICLIENT_COMPAT_CHECK' in os.environ:
-    return
-  o2c_pkg = None
-  try:
-    o2c_pkg = pkg_resources.get_distribution('oauth2client')
-  except pkg_resources.DistributionNotFound:
-    pass
-  oauth2client = None
-  try:
-    import oauth2client
-  except ImportError:
-    pass
-  if o2c_pkg is None and oauth2client is not None:
-    raise RuntimeError(
-        'Previous version of google-api-python-client detected; due to a '
-        'packaging issue, we cannot perform an in-place upgrade. Please remove '
-        'the old version and re-install this package.'
-    )
+    import os
+    if 'SKIP_GOOGLEAPICLIENT_COMPAT_CHECK' in os.environ:
+        return
+    o2c_pkg = None
+    try:
+        o2c_pkg = pkg_resources.get_distribution('oauth2client')
+    except pkg_resources.DistributionNotFound:
+        pass
+    oauth2client = None
+    try:
+        import oauth2client
+    except ImportError:
+        pass
+    if o2c_pkg is None and oauth2client is not None:
+        raise RuntimeError(
+            'Previous version of google-api-python-client detected; due to a '
+            'packaging issue, we cannot perform an in-place upgrade. Please remove '
+            'the old version and re-install this package.'
+        )
 
 _DetectBadness()
 
@@ -64,7 +64,7 @@ install_requires = [
 ]
 
 if sys.version_info < (2, 7):
-  install_requires.append('argparse')
+    install_requires.append('argparse')
 
 long_desc = """The Google API Client for Python is a client library for
 accessing the Plus, Moderator, and many other Google APIs."""

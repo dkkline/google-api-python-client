@@ -3,15 +3,15 @@
 import googleapiclient
 
 try:
-  import oauth2client
+    import oauth2client
 except ImportError:
-  raise RuntimeError(
-      'Previous version of google-api-python-client detected; due to a '
-      'packaging issue, we cannot perform an in-place upgrade. To repair, '
-      'remove and reinstall this package, along with oauth2client and '
-      'uritemplate. One can do this with pip via\n'
-      '  pip install -I google-api-python-client'
-  )
+    raise RuntimeError(
+        'Previous version of google-api-python-client detected; due to a '
+        'packaging issue, we cannot perform an in-place upgrade. To repair, '
+        'remove and reinstall this package, along with oauth2client and '
+        'uritemplate. One can do this with pip via\n'
+        '  pip install -I google-api-python-client'
+    )
 
 from googleapiclient import channel
 from googleapiclient import discovery
@@ -37,4 +37,4 @@ _SUBMODULES = {
 
 import sys
 for module_name, module in _SUBMODULES.iteritems():
-  sys.modules['apiclient.%s' % module_name] = module
+    sys.modules['apiclient.%s' % module_name] = module

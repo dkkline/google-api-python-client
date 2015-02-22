@@ -59,39 +59,39 @@ http = credentials.authorize(httplib2.Http(memcache))
 
 class MainHandler(webapp.RequestHandler):
 
-  def get(self):
-    try:
-      # Derive desired bucket name from path after domain name.
-      bucket = self.request.path
-      if bucket[-1] == '/':
-        # Trim final slash, if necessary.
-        bucket = bucket[:-1]
-      # Send HTTP request to Google Cloud Storage to obtain bucket listing.
-      resp, content = http.request(URI + bucket, "GET")
-      if resp.status != 200:
-        # If error getting bucket listing, raise exception.
-        err = 'Error: ' + str(resp.status) + ', bucket: ' + bucket + \
-              ', response: ' + str(content)
-        raise Exception(err)
-      # Edit returned bucket listing XML to insert a reference to our style
-      # sheet for nice formatting and send results to client.
-      content = re.sub('(<ListBucketResult)', XSL + '\\1', content)
-      self.response.headers['Content-Type'] = 'text/xml'
-      self.response.out.write(content)
-    except Exception as e:
-      self.response.headers['Content-Type'] = 'text/plain'
-      self.response.set_status(404)
-      self.response.out.write(str(e))
+    def get(self):
+        try:
+            # Derive desired bucket name from path after domain name.
+            bucket = self.request.path
+            if bucket[-1] == '/':
+                # Trim final slash, if necessary.
+                bucket = bucket[:-1]
+            # Send HTTP request to Google Cloud Storage to obtain bucket listing.
+            resp, content = http.request(URI + bucket, "GET")
+            if resp.status != 200:
+                # If error getting bucket listing, raise exception.
+                err = 'Error: ' + str(resp.status) + ', bucket: ' + bucket + \
+                      ', response: ' + str(content)
+                raise Exception(err)
+            # Edit returned bucket listing XML to insert a reference to our style
+            # sheet for nice formatting and send results to client.
+            content = re.sub('(<ListBucketResult)', XSL + '\\1', content)
+            self.response.headers['Content-Type'] = 'text/xml'
+            self.response.out.write(content)
+        except Exception as e:
+            self.response.headers['Content-Type'] = 'text/plain'
+            self.response.set_status(404)
+            self.response.out.write(str(e))
 
 
 def main():
-  application = webapp.WSGIApplication(
-      [
-       ('.*', MainHandler),
-      ],
-      debug=True)
-  run_wsgi_app(application)
+    application = webapp.WSGIApplication(
+        [
+         ('.*', MainHandler),
+        ],
+        debug=True)
+    run_wsgi_app(application)
 
 
 if __name__ == '__main__':
-  main()
+    main()

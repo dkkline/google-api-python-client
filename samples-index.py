@@ -41,13 +41,13 @@ BASE_HG_URI = ('http://code.google.com/p/google-api-python-client/source/'
 http = httplib2.Http('.cache')
 r, c =  http.request('https://www.googleapis.com/discovery/v1/apis')
 if r.status != 200:
-  raise ValueError('Received non-200 response when retrieving Discovery.')
+    raise ValueError('Received non-200 response when retrieving Discovery.')
 
 # Dictionary mapping api names to their discovery description.
 DIRECTORY = {}
 for item in json.loads(c)['items']:
-  if item['preferred']:
-    DIRECTORY[item['name']] = item
+    if item['preferred']:
+        DIRECTORY[item['name']] = item
 
 # A list of valid keywords. Should not be taken as complete, add to
 # this list as needed.
@@ -63,63 +63,90 @@ KEYWORDS = {
 
 
 def get_lines(name, lines):
-  """Return lines that begin with name.
+    """Return lines that begin with name.
 
-  Lines are expected to look like:
+    Lines are expected to look like:
 
-     name: space separated values
+       name: space separated values
 
-  Args:
-    name: string, parameter name.
-    lines: iterable of string, lines in the file.
+    Args:
+      name: string, parameter name.
+      lines: iterable of string, lines in the file.
 
-  Returns:
-    List of values in the lines that match.
-  """
-  retval = []
-  matches = itertools.ifilter(lambda x: x.startswith(name + ':'), lines)
-  for line in matches:
-    retval.extend(line[len(name)+1:].split())
-  return retval
+    Returns:
+      List of values in the lines that match.
+    """
+    retval = []
+    matches = itertools.ifilter(lambda x: x.startswith(name + ':'), lines)
+    for line in matches:
+        retval.extend(line[len(name)+1:].split())
+    return retval
 
 
 def wiki_escape(s):
-  """Detect WikiSyntax (i.e. InterCaps, a.k.a. CamelCase) and escape it."""
-  ret = []
-  for word in s.split():
-    if re.match(r'[A-Z]+[a-z]+[A-Z]', word):
-      word = '!%s' % word
-    ret.append(word)
-  return ' '.join(ret)
+    """Detect WikiSyntax (i.e. InterCaps, a.k.a. CamelCase) and escape it."""
+    ret = []
+    for word in s.split():
+        if re.match(r'[A-Z]+[a-z]+[A-Z]', word):
+            word = '!%s' % word
+        ret.append(word)
+    return ' '.join(ret)
 
 
 def context_from_sample(api, keywords, dirname, desc, uri):
-  """Return info for expanding a sample into a template.
+    """Return info for expanding a sample into a template.
 
-  Args:
-    api: string, name of api.
-    keywords: list of string, list of keywords for the given api.
-    dirname: string, directory name of the sample.
-    desc: string, long description of the sample.
-    uri: string, uri of the sample code if provided in the README.
+    Args:
+      api: string, name of api.
+      keywords: list of string, list of keywords for the given api.
+      dirname: string, directory name of the sample.
+      desc: string, long description of the sample.
+      uri: string, uri of the sample code if provided in the README.
 
-  Returns:
-    A dictionary of values useful for template expansion.
-  """
-  if uri is None:
-    uri = BASE_HG_URI + dirname.replace('/', '%2F')
-  else:
-    uri = ''.join(uri)
-  if api is None:
-    return None
-  else:
-    entry = DIRECTORY[api]
+    Returns:
+      A dictionary of values useful for template expansion.
+    """
+    if uri is None:
+        uri = BASE_HG_URI + dirname.replace('/', '%2F')
+    else:
+        uri = ''.join(uri)
+    if api is None:
+        return None
+    else:
+        entry = DIRECTORY[api]
+        context = {
+            'api': api,
+            'version': entry['version'],
+            'api_name': wiki_escape(entry.get('title', entry.get('description'))),
+            'api_desc': wiki_escape(entry['description']),
+            'api_icon': entry['icons']['x32'],
+            'keywords': keywords,
+            'dir': dirname,
+            'uri': uri,
+            'desc': wiki_escape(desc),
+            }
+        return context
+
+
+def keyword_context_from_sample(keywords, dirname, desc, uri):
+    """Return info for expanding a sample into a template.
+
+    Sample may not be about a specific api.
+
+    Args:
+      keywords: list of string, list of keywords for the given api.
+      dirname: string, directory name of the sample.
+      desc: string, long description of the sample.
+      uri: string, uri of the sample code if provided in the README.
+
+    Returns:
+      A dictionary of values useful for template expansion.
+    """
+    if uri is None:
+        uri = BASE_HG_URI + dirname.replace('/', '%2F')
+    else:
+        uri = ''.join(uri)
     context = {
-        'api': api,
-        'version': entry['version'],
-        'api_name': wiki_escape(entry.get('title', entry.get('description'))),
-        'api_desc': wiki_escape(entry['description']),
-        'api_icon': entry['icons']['x32'],
         'keywords': keywords,
         'dir': dirname,
         'uri': uri,
@@ -128,89 +155,62 @@ def context_from_sample(api, keywords, dirname, desc, uri):
     return context
 
 
-def keyword_context_from_sample(keywords, dirname, desc, uri):
-  """Return info for expanding a sample into a template.
-
-  Sample may not be about a specific api.
-
-  Args:
-    keywords: list of string, list of keywords for the given api.
-    dirname: string, directory name of the sample.
-    desc: string, long description of the sample.
-    uri: string, uri of the sample code if provided in the README.
-
-  Returns:
-    A dictionary of values useful for template expansion.
-  """
-  if uri is None:
-    uri = BASE_HG_URI + dirname.replace('/', '%2F')
-  else:
-    uri = ''.join(uri)
-  context = {
-      'keywords': keywords,
-      'dir': dirname,
-      'uri': uri,
-      'desc': wiki_escape(desc),
-      }
-  return context
-
-
 def scan_readme_files(dirname):
-  """Scans all subdirs of dirname for README files.
+    """Scans all subdirs of dirname for README files.
 
-  Args:
-    dirname: string, name of directory to walk.
+    Args:
+      dirname: string, name of directory to walk.
 
-  Returns:
-    (samples, keyword_set): list of information about all samples, the union
-      of all keywords found.
-  """
-  samples = []
-  keyword_set = set()
+    Returns:
+      (samples, keyword_set): list of information about all samples, the union
+        of all keywords found.
+    """
+    samples = []
+    keyword_set = set()
 
-  for root, dirs, files in os.walk(dirname):
-    if 'README' in files:
-      filename = os.path.join(root, 'README')
-      with open(filename, 'r') as f:
-        content = f.read()
-        lines = content.splitlines()
-        desc = ' '.join(itertools.takewhile(lambda x: x, lines))
-        api = get_lines('api', lines)
-        keywords = get_lines('keywords', lines)
-        uri = get_lines('uri', lines)
-        if not uri:
-          uri = None
+    for root, dirs, files in os.walk(dirname):
+        if 'README' in files:
+            filename = os.path.join(root, 'README')
+            with open(filename, 'r') as f:
+                content = f.read()
+                lines = content.splitlines()
+                desc = ' '.join(itertools.takewhile(lambda x: x, lines))
+                api = get_lines('api', lines)
+                keywords = get_lines('keywords', lines)
+                uri = get_lines('uri', lines)
+                if not uri:
+                    uri = None
 
-        for k in keywords:
-          if k not in KEYWORDS:
-            raise ValueError(
-                '%s is not a valid keyword in file %s' % (k, filename))
-        keyword_set.update(keywords)
-        if not api:
-          api = [None]
-        samples.append((api[0], keywords, root[1:], desc, uri))
+                for k in keywords:
+                    if k not in KEYWORDS:
+                        raise ValueError(
+                            '%s is not a valid keyword in file %s' % (k, filename))
+                keyword_set.update(keywords)
+                if not api:
+                    api = [None]
+                samples.append((api[0], keywords, root[1:], desc, uri))
 
-  samples.sort()
+    samples.sort()
 
-  return samples, keyword_set
+    return samples, keyword_set
 
 
 def main():
-  # Get all the information we need out of the README files in the samples.
-  samples, keyword_set = scan_readme_files('./samples')
+    # Get all the information we need out of the README files in the samples.
+    samples, keyword_set = scan_readme_files('./samples')
 
-  # Now build a wiki page with all that information. Accumulate all the
-  # information as string to be concatenated when were done.
-  page = ['<wiki:toc max_depth="3" />\n= Samples By API =\n']
+    # Now build a wiki page with all that information. Accumulate all the
+    # information as string to be concatenated when were done.
+    page = ['<wiki:toc max_depth="3" />\n= Samples By API =\n']
 
-  # All the samples, grouped by API.
-  current_api = None
-  for api, keywords, dirname, desc, uri in samples:
-    context = context_from_sample(api, keywords, dirname, desc, uri)
-    if context is None:
-      continue
-    if current_api != api:
-      page.append("""
+    # All the samples, grouped by API.
+    current_api = None
+    for api, keywords, dirname, desc, uri in samples:
+        context = context_from_sample(api, keywords, dirname, desc, uri)
+        if context is None:
+            continue
+        if current_api != api:
+            page.append("""
 === %(api_icon)s %(api_name)s ===
 
 %(api_desc)s
@@ -218,29 +218,29 @@ def main():
 Documentation for the %(api_name)s in [https://google-api-client-libraries.appspot.com/documentation/%(api)s/%(version)s/python/latest/ PyDoc]
 
 """ % context)
-      current_api = api
+            current_api = api
 
-    page.append('|| [%(uri)s %(dir)s] || %(desc)s ||\n' % context)
+        page.append('|| [%(uri)s %(dir)s] || %(desc)s ||\n' % context)
 
-  # Now group the samples by keywords.
-  for keyword, keyword_name in KEYWORDS.iteritems():
-    if keyword not in keyword_set:
-      continue
-    page.append('\n= %s Samples =\n\n' % keyword_name)
-    page.append('<table border=1 cellspacing=0 cellpadding=8px>\n')
-    for _, keywords, dirname, desc, uri in samples:
-      context = keyword_context_from_sample(keywords, dirname, desc, uri)
-      if keyword not in keywords:
-        continue
-      page.append("""
+    # Now group the samples by keywords.
+    for keyword, keyword_name in KEYWORDS.iteritems():
+        if keyword not in keyword_set:
+            continue
+        page.append('\n= %s Samples =\n\n' % keyword_name)
+        page.append('<table border=1 cellspacing=0 cellpadding=8px>\n')
+        for _, keywords, dirname, desc, uri in samples:
+            context = keyword_context_from_sample(keywords, dirname, desc, uri)
+            if keyword not in keywords:
+                continue
+            page.append("""
 <tr>
   <td>[%(uri)s %(dir)s] </td>
   <td> %(desc)s </td>
 </tr>""" % context)
-    page.append('</table>\n')
+        page.append('</table>\n')
 
-  print ''.join(page)
+    print ''.join(page)
 
 
 if __name__ == '__main__':
-  main()
+    main()

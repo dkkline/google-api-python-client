@@ -41,18 +41,18 @@ parser.add_argument('--dest', default='snapshot',
 
 
 def _ignore(path, names):
-  retval = set()
-  if path != '.':
-    retval = retval.union(IGNORE_IN_SAMPLES.intersection(names))
-  retval = retval.union(IGNORE.intersection(names))
-  return retval
+    retval = set()
+    if path != '.':
+        retval = retval.union(IGNORE_IN_SAMPLES.intersection(names))
+    retval = retval.union(IGNORE.intersection(names))
+    return retval
 
 
 def main():
-  copytree(FLAGS.source, FLAGS.dest, symlinks=True,
-            ignore=_ignore)
+    copytree(FLAGS.source, FLAGS.dest, symlinks=True,
+              ignore=_ignore)
 
 
 if __name__ == '__main__':
-  FLAGS = parser.parse_args(sys.argv[1:])
-  main()
+    FLAGS = parser.parse_args(sys.argv[1:])
+    main()

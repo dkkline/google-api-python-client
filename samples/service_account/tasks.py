@@ -37,29 +37,29 @@ from googleapiclient.discovery import build
 from oauth2client.client import SignedJwtAssertionCredentials
 
 def main(argv):
-  # Load the key in PKCS 12 format that you downloaded from the Google API
-  # Console when you created your Service account.
-  f = file('key.p12', 'rb')
-  key = f.read()
-  f.close()
+    # Load the key in PKCS 12 format that you downloaded from the Google API
+    # Console when you created your Service account.
+    f = file('key.p12', 'rb')
+    key = f.read()
+    f.close()
 
-  # Create an httplib2.Http object to handle our HTTP requests and authorize it
-  # with the Credentials. Note that the first parameter, service_account_name,
-  # is the Email address created for the Service account. It must be the email
-  # address associated with the key that was created.
-  credentials = SignedJwtAssertionCredentials(
-      '141491975384@developer.gserviceaccount.com',
-      key,
-      scope='https://www.googleapis.com/auth/tasks')
-  http = httplib2.Http()
-  http = credentials.authorize(http)
+    # Create an httplib2.Http object to handle our HTTP requests and authorize it
+    # with the Credentials. Note that the first parameter, service_account_name,
+    # is the Email address created for the Service account. It must be the email
+    # address associated with the key that was created.
+    credentials = SignedJwtAssertionCredentials(
+        '141491975384@developer.gserviceaccount.com',
+        key,
+        scope='https://www.googleapis.com/auth/tasks')
+    http = httplib2.Http()
+    http = credentials.authorize(http)
 
-  service = build("tasks", "v1", http=http)
+    service = build("tasks", "v1", http=http)
 
-  # List all the tasklists for the account.
-  lists = service.tasklists().list().execute(http=http)
-  pprint.pprint(lists)
+    # List all the tasklists for the account.
+    lists = service.tasklists().list().execute(http=http)
+    pprint.pprint(lists)
 
 
 if __name__ == '__main__':
-  main(sys.argv)
+    main(sys.argv)

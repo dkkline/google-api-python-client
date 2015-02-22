@@ -41,42 +41,42 @@ from googleapiclient import sample_tools
 
 
 def main(argv):
-  # Authenticate and construct service.
-  service, flags = sample_tools.init(
-      argv, 'plus', 'v1', __doc__, __file__,
-      scope='https://www.googleapis.com/auth/blogger')
+    # Authenticate and construct service.
+    service, flags = sample_tools.init(
+        argv, 'plus', 'v1', __doc__, __file__,
+        scope='https://www.googleapis.com/auth/blogger')
 
-  service = build('blogger', 'v2', http=http)
+    service = build('blogger', 'v2', http=http)
 
-  try:
+    try:
 
-      users = service.users()
+        users = service.users()
 
-      # Retrieve this user's profile information
-      thisuser = users.get(userId='self').execute(http=http)
-      print 'This user\'s display name is: %s' % thisuser['displayName']
+        # Retrieve this user's profile information
+        thisuser = users.get(userId='self').execute(http=http)
+        print 'This user\'s display name is: %s' % thisuser['displayName']
 
-      # Retrieve the list of Blogs this user has write privileges on
-      thisusersblogs = users.blogs().list(userId='self').execute()
-      for blog in thisusersblogs['items']:
-        print 'The blog named \'%s\' is at: %s' % (blog['name'], blog['url'])
+        # Retrieve the list of Blogs this user has write privileges on
+        thisusersblogs = users.blogs().list(userId='self').execute()
+        for blog in thisusersblogs['items']:
+            print 'The blog named \'%s\' is at: %s' % (blog['name'], blog['url'])
 
-      posts = service.posts()
+        posts = service.posts()
 
-      # List the posts for each blog this user has
-      for blog in thisusersblogs['items']:
-        print 'The posts for %s:' % blog['name']
-        request = posts.list(blogId=blog['id'])
-        while request != None:
-          posts_doc = request.execute(http=http)
-          if 'items' in posts_doc and not (posts_doc['items'] is None):
-            for post in posts_doc['items']:
-              print '  %s (%s)' % (post['title'], post['url'])
-          request = posts.list_next(request, posts_doc)
+        # List the posts for each blog this user has
+        for blog in thisusersblogs['items']:
+            print 'The posts for %s:' % blog['name']
+            request = posts.list(blogId=blog['id'])
+            while request != None:
+                posts_doc = request.execute(http=http)
+                if 'items' in posts_doc and not (posts_doc['items'] is None):
+                    for post in posts_doc['items']:
+                        print '  %s (%s)' % (post['title'], post['url'])
+                request = posts.list_next(request, posts_doc)
 
-  except client.AccessTokenRefreshError:
-    print ('The credentials have been revoked or expired, please re-run'
-      'the application to re-authorize')
+    except client.AccessTokenRefreshError:
+        print ('The credentials have been revoked or expired, please re-run'
+          'the application to re-authorize')
 
 if __name__ == '__main__':
-  main(sys.argv)
+    main(sys.argv)

@@ -63,9 +63,9 @@ TEST_CASES = [
 
 class TestPatch(unittest.TestCase):
 
-  def test_patch(self):
-    for (msg, orig, mod, expected_patch) in TEST_CASES:
-      self.assertEqual(expected_patch, makepatch(orig, mod), msg=msg)
+    def test_patch(self):
+        for (msg, orig, mod, expected_patch) in TEST_CASES:
+            self.assertEqual(expected_patch, makepatch(orig, mod), msg=msg)
 
 
 class TestBaseModel(unittest.TestCase):
@@ -91,4 +91,4 @@ class TestBaseModel(unittest.TestCase):
 
 
 if __name__ == '__main__':
-  unittest.main()
+    unittest.main()
