@@ -42,7 +42,7 @@ from six import StringIO
 
 # Third-party imports
 import httplib2
-import mimeparse
+from . import mimeparse
 import uritemplate
 
 # Local imports
