@@ -879,7 +879,6 @@ class Discovery(unittest.TestCase):
             try:
                 body = request.execute(http=http)
             except HttpError as e:
-                print(e.content, type(e.content))
                 self.assertEqual(b'01234', e.content)
 
         except ImportError:
