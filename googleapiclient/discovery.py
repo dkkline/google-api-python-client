@@ -250,7 +250,7 @@ def build_from_document(
     # future is no longer used.
     future = {}
 
-    if isinstance(service, basestring):
+    if isinstance(service, six.string_types):
         service = json.loads(service)
     base = urllib.parse.urljoin(service['rootUrl'], service['servicePath'])
     schema = Schemas(service)
@@ -612,7 +612,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
 
         for name, regex in six.iteritems(parameters.pattern_params):
             if name in kwargs:
-                if isinstance(kwargs[name], basestring):
+                if isinstance(kwargs[name], six.string_types):
                     pvalues = [kwargs[name]]
                 else:
                     pvalues = kwargs[name]
@@ -628,7 +628,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
                 # name differently, since we want to handle both
                 # arg='value' and arg=['value1', 'value2']
                 if (name in parameters.repeated_params and
-                        not isinstance(kwargs[name], basestring)):
+                        not isinstance(kwargs[name], six.string_types)):
                     values = kwargs[name]
                 else:
                     values = [kwargs[name]]
@@ -677,7 +677,7 @@ def createMethod(methodName, methodDesc, rootDesc, schema):
 
         if media_filename:
             # Ensure we end up with a valid MediaUpload object.
-            if isinstance(media_filename, basestring):
+            if isinstance(media_filename, six.string_types):
                 (media_mime_type, encoding) = mimetypes.guess_type(media_filename)
                 if media_mime_type is None:
                     raise UnknownFileType(media_filename)
